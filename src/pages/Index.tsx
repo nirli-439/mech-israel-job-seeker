@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
-  const [experienceLevel, setExperienceLevel] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [jobType, setJobType] = useState('');
 
   const [jobSources, setJobSources] = useState([
     { id: 1, name: 'LinkedIn', url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true' },
@@ -32,13 +33,26 @@ const Index = () => {
     { id: 17, name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
   ]);
 
-  const israeliCities = [
-    'Tel Aviv', 'Jerusalem', 'Haifa', 'Be\'er Sheva', 'Petah Tikva', 
-    'Netanya', 'Ashdod', 'Rishon LeZion', 'Ramat Gan', 'Herzliya', 'Rehovot'
+  const engineeringTags = [
+    'Mechanical Engineering',
+    'Electrical Engineering', 
+    'Industrial Engineering',
+    'Software Engineering',
+    'Civil Engineering',
+    'Chemical Engineering'
   ];
 
+  const handleTagToggle = (value: string[]) => {
+    setSelectedTags(value);
+  };
+
   const handleSearch = () => {
-    console.log('Searching for:', { searchTerm, location, experienceLevel });
+    console.log('Searching for:', { 
+      searchTerm, 
+      selectedTags, 
+      jobType,
+      location: 'Israel (All locations)' 
+    });
     // Here you can implement actual search logic
   };
 
@@ -64,59 +78,75 @@ const Index = () => {
           <h2 className="text-4xl font-bold mb-6 animate-fade-in">
             Find{' '}
             <span className="bg-israel-gradient bg-clip-text text-transparent">
-              Mechanical Engineering
+              Engineering Jobs
             </span>{' '}
-            Jobs in Israel
+            in Israel
           </h2>
           <p className="text-lg text-tech-gray mb-12 max-w-2xl mx-auto animate-slide-up">
-            Connect with top Israeli companies seeking mechanical engineering students and interns.
+            Connect with top Israeli companies seeking engineering students and professionals across all locations in Israel.
           </p>
 
           {/* Search Section */}
           <Card className="max-w-4xl mx-auto shadow-xl border-0 bg-white/90 backdrop-blur-sm animate-slide-up">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 w-5 h-5 text-tech-gray" />
-                  <Input
-                    placeholder="Job title or keyword"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-12"
-                  />
-                </div>
-                <Select value={location} onValueChange={setLocation}>
-                  <SelectTrigger className="h-12">
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2 text-tech-gray" />
-                      <SelectValue placeholder="Location" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {israeliCities.map((city) => (
-                      <SelectItem key={city} value={city.toLowerCase()}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={experienceLevel} onValueChange={setExperienceLevel}>
+            <CardContent className="p-6 space-y-6">
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-3 top-3 w-5 h-5 text-tech-gray" />
+                <Input
+                  placeholder="Search jobs by title, company, or keywords..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-12 text-lg"
+                />
+              </div>
+
+              {/* Engineering Tags */}
+              <div className="space-y-3">
+                <h3 className="text-sm font-medium text-tech-gray text-left">Engineering Fields</h3>
+                <ToggleGroup 
+                  type="multiple" 
+                  value={selectedTags} 
+                  onValueChange={handleTagToggle}
+                  className="flex flex-wrap justify-center gap-2"
+                >
+                  {engineeringTags.map((tag) => (
+                    <ToggleGroupItem 
+                      key={tag} 
+                      value={tag}
+                      className="px-4 py-2 rounded-full border-2 data-[state=on]:bg-israel-gradient data-[state=on]:text-white data-[state=on]:border-transparent hover:border-primary transition-all"
+                    >
+                      {tag}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+
+              {/* Job Type and Location */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Select value={jobType} onValueChange={setJobType}>
                   <SelectTrigger className="h-12">
                     <div className="flex items-center">
                       <Users className="w-4 h-4 mr-2 text-tech-gray" />
-                      <SelectValue placeholder="Type" />
+                      <SelectValue placeholder="Job Type" />
                     </div>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="student">Student Job</SelectItem>
-                    <SelectItem value="intern">Internship</SelectItem>
+                    <SelectItem value="student">Student Position</SelectItem>
+                    <SelectItem value="internship">Internship</SelectItem>
                     <SelectItem value="entry">Entry Level</SelectItem>
+                    <SelectItem value="experienced">Experienced</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button className="h-12 bg-israel-gradient text-white hover:opacity-90" onClick={handleSearch}>
-                  Search Jobs
-                </Button>
+                
+                <div className="flex items-center h-12 px-3 bg-gray-50 rounded-md border">
+                  <MapPin className="w-4 h-4 mr-2 text-tech-gray" />
+                  <span className="text-tech-gray">Israel - All Locations</span>
+                </div>
               </div>
+
+              <Button className="w-full h-12 bg-israel-gradient text-white hover:opacity-90 text-lg font-medium" onClick={handleSearch}>
+                Search Engineering Jobs
+              </Button>
             </CardContent>
           </Card>
         </div>
