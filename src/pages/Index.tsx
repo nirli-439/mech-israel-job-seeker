@@ -13,7 +13,7 @@ const Index = () => {
   const [experienceLevel, setExperienceLevel] = useState('');
 
   const [jobSources, setJobSources] = useState([
-    { id: 1, name: 'LinkedIn', url: 'https://il.linkedin.com/jobs/mechanical-engineering-student-jobs?keywords=mechanical%20engineer%20student&location=Israel&f_JT=I' },
+    { id: 1, name: 'LinkedIn', url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true' },
     { id: 2, name: 'Glassdoor', url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm' },
     { id: 3, name: 'AllJobs', url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=' },
     { id: 4, name: 'JobMaster', url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=' },
