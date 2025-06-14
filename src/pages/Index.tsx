@@ -1,16 +1,10 @@
 
 import { useState } from 'react';
-import { Search, MapPin, Briefcase, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Briefcase } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [jobType, setJobType] = useState('');
-
   const [jobSources, setJobSources] = useState([
     { id: 1, name: 'LinkedIn', url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true' },
     { id: 2, name: 'Glassdoor', url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm' },
@@ -30,15 +24,6 @@ const Index = () => {
     { id: 16, name: 'Ness Technologies', url: 'https://www.ness.com/careers/?search=intern' },
     { id: 17, name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
   ]);
-
-  const handleSearch = () => {
-    console.log('Searching for:', { 
-      searchTerm, 
-      jobType,
-      location: 'Israel (All locations)' 
-    });
-    // Here you can implement actual search logic
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -69,49 +54,6 @@ const Index = () => {
           <p className="text-lg text-tech-gray mb-12 max-w-2xl mx-auto animate-slide-up">
             Connect with top Israeli companies seeking mechanical engineering students and professionals across all locations in Israel.
           </p>
-
-          {/* Search Section */}
-          <Card className="max-w-4xl mx-auto shadow-xl border-0 bg-white/90 backdrop-blur-sm animate-slide-up">
-            <CardContent className="p-6 space-y-6">
-              {/* Search Input */}
-              <div className="relative">
-                <Search className="absolute left-3 top-3 w-5 h-5 text-tech-gray" />
-                <Input
-                  placeholder="Search jobs by title, company, or keywords..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 text-lg"
-                />
-              </div>
-
-              {/* Job Type and Location */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Select value={jobType} onValueChange={setJobType}>
-                  <SelectTrigger className="h-12">
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-2 text-tech-gray" />
-                      <SelectValue placeholder="Job Type" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="student">Student Position</SelectItem>
-                    <SelectItem value="internship">Internship</SelectItem>
-                    <SelectItem value="entry">Entry Level</SelectItem>
-                    <SelectItem value="experienced">Experienced</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <div className="flex items-center h-12 px-3 bg-gray-50 rounded-md border">
-                  <MapPin className="w-4 h-4 mr-2 text-tech-gray" />
-                  <span className="text-tech-gray">Israel - All Locations</span>
-                </div>
-              </div>
-
-              <Button className="w-full h-12 bg-israel-gradient text-white hover:opacity-90 text-lg font-medium" onClick={handleSearch}>
-                Search Mechanical Engineering Jobs
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
