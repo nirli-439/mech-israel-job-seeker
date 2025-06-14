@@ -101,7 +101,7 @@ const Index = () => {
 
         {/* Simple Footer */}
         <div className="text-center mt-16 pt-8 border-t border-gray-200">
-          <p className="text-tech-gray">© 2024 MechJobs IL By Lior Cohen for Lior Cohen - Connecting Mechanical Engineering Students with Opportunities</p>
+          <p className="text-tech-gray">© 2025 MechJobs IL By Lior Cohen for Lior Cohen - Connecting Mechanical Engineering Students with Opportunities</p>
         </div>
       </div>
     </div>;
