@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Plus, Edit, Trash2 } from 'lucide-react';
+import { ExternalLink, Plus, Edit, Trash2, Lock } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
 interface JobSource {
   id: number;
@@ -20,6 +22,38 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   const [isEditing, setIsEditing] = useState(false);
   const [editingSources, setEditingSources] = useState<JobSource[]>(sources);
   const [newSource, setNewSource] = useState({ name: '', url: '' });
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { toast } = useToast();
+
+  const handlePasswordSubmit = () => {
+    if (password === 'afeka') {
+      setIsAuthenticated(true);
+      setIsPasswordDialogOpen(false);
+      setIsEditing(true);
+      setPassword('');
+      toast({
+        title: "Access granted",
+        description: "You can now manage job sources.",
+      });
+    } else {
+      toast({
+        title: "Access denied",
+        description: "Incorrect password.",
+        variant: "destructive",
+      });
+      setPassword('');
+    }
+  };
+
+  const handleManageClick = () => {
+    if (isAuthenticated) {
+      setIsEditing(!isEditing);
+    } else {
+      setIsPasswordDialogOpen(true);
+    }
+  };
 
   const handleAddSource = () => {
     if (newSource.name && newSource.url) {
@@ -46,6 +80,10 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   const handleSave = () => {
     onSourcesChange(editingSources);
     setIsEditing(false);
+    toast({
+      title: "Changes saved",
+      description: "Job sources have been updated successfully.",
+    });
   };
 
   const handleCancel = () => {
@@ -58,17 +96,50 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     <Card className="mb-6">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Job Sources</CardTitle>
-        <Button 
-          variant="outline" 
-          onClick={() => setIsEditing(!isEditing)}
-          className="flex items-center gap-2"
-        >
-          <Edit className="w-4 h-4" />
-          {isEditing ? 'Cancel' : 'Manage Sources'}
-        </Button>
+        <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+          <DialogTrigger asChild>
+            <Button 
+              variant="outline" 
+              onClick={handleManageClick}
+              className="flex items-center gap-2"
+            >
+              {isAuthenticated ? <Edit className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+              {isEditing ? 'Cancel' : 'Manage Sources'}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Enter Password</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input
+                type="password"
+                placeholder="Enter password to manage sources"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+              />
+              <div className="flex gap-2">
+                <Button onClick={handlePasswordSubmit} className="flex-1">
+                  Submit
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setIsPasswordDialogOpen(false);
+                    setPassword('');
+                  }}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardHeader>
       <CardContent>
-        {isEditing ? (
+        {isEditing && isAuthenticated ? (
           <div className="space-y-4">
             {/* Add new source */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
