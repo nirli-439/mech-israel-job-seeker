@@ -34,13 +34,13 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
       setIsEditing(true);
       setPassword('');
       toast({
-        title: "Access granted",
-        description: "You can now manage job sources.",
+        title: "גישה אושרה",
+        description: "כעת ניתן לנהל מקורות עבודה.",
       });
     } else {
       toast({
-        title: "Access denied",
-        description: "Incorrect password.",
+        title: "גישה נדחתה",
+        description: "סיסמה שגויה.",
         variant: "destructive",
       });
       setPassword('');
@@ -48,9 +48,16 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   };
 
   const handleManageClick = () => {
-    if (isAuthenticated) {
-      setIsEditing(!isEditing);
+    if (isEditing && isAuthenticated) {
+      // Cancel editing
+      setIsEditing(false);
+      setEditingSources(sources);
+      setNewSource({ name: '', url: '' });
+    } else if (isAuthenticated) {
+      // Start editing (already authenticated)
+      setIsEditing(true);
     } else {
+      // Need authentication
       setIsPasswordDialogOpen(true);
     }
   };
@@ -81,8 +88,8 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     onSourcesChange(editingSources);
     setIsEditing(false);
     toast({
-      title: "Changes saved",
-      description: "Job sources have been updated successfully.",
+      title: "שינויים נשמרו",
+      description: "מקורות העבודה עודכנו בהצלחה.",
     });
   };
 
@@ -95,7 +102,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   return (
     <Card className="mb-6">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Job Sources</CardTitle>
+        <CardTitle>מקורות עבודה</CardTitle>
         <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
           <DialogTrigger asChild>
             <Button 
@@ -103,25 +110,25 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
               onClick={handleManageClick}
               className="flex items-center gap-2"
             >
-              {isAuthenticated ? <Edit className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-              {isEditing ? 'Cancel' : 'Manage Sources'}
+              {isEditing && isAuthenticated ? <Edit className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+              {isEditing && isAuthenticated ? 'ביטול' : 'ניהול מקורות'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Enter Password</DialogTitle>
+              <DialogTitle>הכנס סיסמה</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <Input
                 type="password"
-                placeholder="Enter password to manage sources"
+                placeholder="הכנס סיסמה לניהול מקורות"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
               />
               <div className="flex gap-2">
                 <Button onClick={handlePasswordSubmit} className="flex-1">
-                  Submit
+                  אישור
                 </Button>
                 <Button 
                   variant="outline" 
@@ -131,7 +138,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                   }}
                   className="flex-1"
                 >
-                  Cancel
+                  ביטול
                 </Button>
               </div>
             </div>
@@ -144,18 +151,18 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
             {/* Add new source */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <Input
-                placeholder="Source name"
+                placeholder="שם המקור"
                 value={newSource.name}
                 onChange={(e) => setNewSource({ ...newSource, name: e.target.value })}
               />
               <Input
-                placeholder="Source URL"
+                placeholder="קישור למקור"
                 value={newSource.url}
                 onChange={(e) => setNewSource({ ...newSource, url: e.target.value })}
               />
               <Button onClick={handleAddSource} className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
-                Add Source
+                הוסף מקור
               </Button>
             </div>
 
@@ -178,15 +185,15 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                     className="flex items-center gap-2"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Delete
+                    מחק
                   </Button>
                 </div>
               ))}
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleSave}>Save Changes</Button>
-              <Button variant="outline" onClick={handleCancel}>Cancel</Button>
+              <Button onClick={handleSave}>שמור שינויים</Button>
+              <Button variant="outline" onClick={handleCancel}>ביטול</Button>
             </div>
           </div>
         ) : (
