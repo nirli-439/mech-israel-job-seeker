@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,15 +48,12 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   const handleManageClick = () => {
     if (isEditing && isAuthenticated) {
-      // Cancel editing
       setIsEditing(false);
       setEditingSources(sources);
       setNewSource({ name: '', url: '' });
     } else if (isAuthenticated) {
-      // Start editing (already authenticated)
       setIsEditing(true);
     } else {
-      // Need authentication
       setIsPasswordDialogOpen(true);
     }
   };
@@ -125,6 +121,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                className="text-right"
               />
               <div className="flex gap-2">
                 <Button onClick={handlePasswordSubmit} className="flex-1">
@@ -154,11 +151,13 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                 placeholder="שם המקור"
                 value={newSource.name}
                 onChange={(e) => setNewSource({ ...newSource, name: e.target.value })}
+                className="text-right"
               />
               <Input
                 placeholder="קישור למקור"
                 value={newSource.url}
                 onChange={(e) => setNewSource({ ...newSource, url: e.target.value })}
+                className="text-left"
               />
               <Button onClick={handleAddSource} className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
@@ -173,10 +172,12 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                   <Input
                     value={source.name}
                     onChange={(e) => handleUpdateSource(source.id, 'name', e.target.value)}
+                    className="text-right"
                   />
                   <Input
                     value={source.url}
                     onChange={(e) => handleUpdateSource(source.id, 'url', e.target.value)}
+                    className="text-left"
                   />
                   <Button
                     variant="destructive"
@@ -207,7 +208,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                 className="flex items-center justify-center p-3 bg-white rounded-lg border hover:border-primary hover:shadow-md transition-all duration-200 text-sm font-medium text-tech-gray hover:text-primary group"
               >
                 <span className="truncate">{source.name}</span>
-                <ExternalLink className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ExternalLink className="w-3 h-3 mr-1 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             ))}
           </div>

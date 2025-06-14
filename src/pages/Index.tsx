@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
+
 const Index = () => {
   const [jobSources, setJobSources] = useState([{
     id: 1,
@@ -71,12 +72,13 @@ const Index = () => {
     name: 'Amarel',
     url: 'https://www.amarel.net/careers-tags/students/'
   }]);
-  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50" dir="rtl">
       {/* Centered Main Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-3 mb-6">
+          <div className="flex items-center justify-center space-x-3 space-x-reverse mb-6">
             <div className="w-12 h-12 bg-israel-gradient rounded-xl flex items-center justify-center">
               <Briefcase className="w-7 h-7 text-white" />
             </div>
@@ -86,11 +88,11 @@ const Index = () => {
           </div>
           
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-            Find Jobs for Mechanical Engineering Students in Israel
+            מציאת עבודות לסטודנטים להנדסת מכונות בישראל
           </h2>
           
           <p className="text-lg text-tech-gray max-w-2xl mx-auto">
-            Your one-stop destination to discover opportunities at top Israeli companies
+            היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
           </p>
         </div>
 
@@ -101,9 +103,11 @@ const Index = () => {
 
         {/* Simple Footer */}
         <div className="text-center mt-16 pt-8 border-t border-gray-200">
-          <p className="text-tech-gray">© 2025 MechJobs IL By Lior Cohen for Lior Cohen - Connecting Mechanical Engineering Students with Opportunities</p>
+          <p className="text-tech-gray">© 2025 MechJobs IL מאת ליאור כהן עבור ליאור כהן - מחבר סטודנטים להנדסת מכונות עם הזדמנויות</p>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
