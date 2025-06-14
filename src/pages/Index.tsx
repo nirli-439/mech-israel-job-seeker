@@ -5,12 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [jobType, setJobType] = useState('');
 
   const [jobSources, setJobSources] = useState([
@@ -33,23 +31,9 @@ const Index = () => {
     { id: 17, name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
   ]);
 
-  const engineeringTags = [
-    'Mechanical Engineering',
-    'Electrical Engineering', 
-    'Industrial Engineering',
-    'Software Engineering',
-    'Civil Engineering',
-    'Chemical Engineering'
-  ];
-
-  const handleTagToggle = (value: string[]) => {
-    setSelectedTags(value);
-  };
-
   const handleSearch = () => {
     console.log('Searching for:', { 
       searchTerm, 
-      selectedTags, 
       jobType,
       location: 'Israel (All locations)' 
     });
@@ -78,12 +62,12 @@ const Index = () => {
           <h2 className="text-4xl font-bold mb-6 animate-fade-in">
             Find{' '}
             <span className="bg-israel-gradient bg-clip-text text-transparent">
-              Engineering Jobs
+              Mechanical Engineering Jobs
             </span>{' '}
             in Israel
           </h2>
           <p className="text-lg text-tech-gray mb-12 max-w-2xl mx-auto animate-slide-up">
-            Connect with top Israeli companies seeking engineering students and professionals across all locations in Israel.
+            Connect with top Israeli companies seeking mechanical engineering students and professionals across all locations in Israel.
           </p>
 
           {/* Search Section */}
@@ -98,27 +82,6 @@ const Index = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 h-12 text-lg"
                 />
-              </div>
-
-              {/* Engineering Tags */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium text-tech-gray text-left">Engineering Fields</h3>
-                <ToggleGroup 
-                  type="multiple" 
-                  value={selectedTags} 
-                  onValueChange={handleTagToggle}
-                  className="flex flex-wrap justify-center gap-2"
-                >
-                  {engineeringTags.map((tag) => (
-                    <ToggleGroupItem 
-                      key={tag} 
-                      value={tag}
-                      className="px-4 py-2 rounded-full border-2 data-[state=on]:bg-israel-gradient data-[state=on]:text-white data-[state=on]:border-transparent hover:border-primary transition-all"
-                    >
-                      {tag}
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
               </div>
 
               {/* Job Type and Location */}
@@ -145,7 +108,7 @@ const Index = () => {
               </div>
 
               <Button className="w-full h-12 bg-israel-gradient text-white hover:opacity-90 text-lg font-medium" onClick={handleSearch}>
-                Search Engineering Jobs
+                Search Mechanical Engineering Jobs
               </Button>
             </CardContent>
           </Card>
@@ -174,7 +137,7 @@ const Index = () => {
               <h4 className="text-xl font-bold">MechJobs IL</h4>
             </div>
             <p className="text-gray-400 text-center">
-              &copy; 2024 MechJobs IL. Connecting Israeli engineering students with opportunities.
+              &copy; 2024 MechJobs IL. Connecting Israeli mechanical engineering students with opportunities.
             </p>
           </div>
         </div>
