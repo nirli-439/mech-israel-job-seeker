@@ -1,12 +1,11 @@
 
 import { useState } from 'react';
-import { Search, MapPin, Briefcase, Users, Filter } from 'lucide-react';
+import { Search, MapPin, Briefcase, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import JobSourceManager from '@/components/JobSourceManager';
-import JobCard from '@/components/JobCard';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -32,75 +31,6 @@ const Index = () => {
     { id: 16, name: 'Ness Technologies', url: 'https://www.ness.com/careers/?search=intern' },
     { id: 17, name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
   ]);
-
-  const jobListings = [
-    {
-      id: 1,
-      title: 'Mechanical Engineering Intern',
-      company: 'Rafael Advanced Defense Systems',
-      location: 'Haifa',
-      type: 'Internship',
-      posted: '2 days ago',
-      description: 'Join our R&D team working on cutting-edge defense technologies. Perfect for mechanical engineering students seeking hands-on experience.',
-      tags: ['CAD', 'SolidWorks', 'R&D', 'Defense Technology'],
-      applyUrl: 'https://career.rafael.co.il/students/'
-    },
-    {
-      id: 2,
-      title: 'Product Development Student Position',
-      company: 'Elbit Systems',
-      location: 'Haifa',
-      type: 'Student Job',
-      posted: '1 week ago',
-      description: 'Work on advanced defense and aerospace systems. Gain experience in mechanical design and testing.',
-      tags: ['Aerospace', 'Defense', 'Mechanical Design', 'Testing'],
-      applyUrl: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/'
-    },
-    {
-      id: 3,
-      title: 'Engineering Intern - Manufacturing',
-      company: 'Intel Israel',
-      location: 'Jerusalem',
-      type: 'Internship',
-      posted: '3 days ago',
-      description: 'Support manufacturing processes and equipment optimization in our semiconductor facility.',
-      tags: ['Manufacturing', 'Process Engineering', 'Semiconductors'],
-      applyUrl: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel'
-    },
-    {
-      id: 4,
-      title: 'Mechanical Engineer Student',
-      company: 'Israel Aerospace Industries (IAI)',
-      location: 'Ben Gurion Airport',
-      type: 'Student Job',
-      posted: '5 days ago',
-      description: 'Join our aerospace engineering team working on aircraft and space systems development.',
-      tags: ['Aerospace', 'Aircraft Design', 'Space Systems'],
-      applyUrl: 'https://jobs.iai.co.il/jobs/?tp=משרت%20סטודנט'
-    },
-    {
-      id: 5,
-      title: 'R&D Engineering Intern',
-      company: 'Applied Materials',
-      location: 'Rehovot',
-      type: 'Internship',
-      posted: '1 week ago',
-      description: 'Work on semiconductor manufacturing equipment and process development.',
-      tags: ['R&D', 'Semiconductor Equipment', 'Process Development'],
-      applyUrl: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student'
-    },
-    {
-      id: 6,
-      title: 'Medical Device Engineering Student',
-      company: 'Art Medical',
-      location: 'Tel Aviv',
-      type: 'Student Job',
-      posted: '4 days ago',
-      description: 'Support the development of innovative medical devices and surgical instruments.',
-      tags: ['Medical Devices', 'Product Development', 'Healthcare'],
-      applyUrl: 'https://artmedical.com/careers/?search=intern'
-    }
-  ];
 
   const israeliCities = [
     'Tel Aviv', 'Jerusalem', 'Haifa', 'Be\'er Sheva', 'Petah Tikva', 
@@ -200,25 +130,6 @@ const Index = () => {
             sources={jobSources} 
             onSourcesChange={setJobSources} 
           />
-        </div>
-      </section>
-
-      {/* Job Listings Section */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-3xl font-bold">Latest Opportunities</h3>
-            <Button variant="outline" className="flex items-center space-x-2">
-              <Filter className="w-4 h-4" />
-              <span>Filters</span>
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {jobListings.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
         </div>
       </section>
 
