@@ -1,16 +1,37 @@
 
 import { useState } from 'react';
-import { Search, MapPin, Briefcase, Users, Building, ChevronDown, Clock, Filter, ExternalLink } from 'lucide-react';
+import { Search, MapPin, Briefcase, Users, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import JobSourceManager from '@/components/JobSourceManager';
+import JobCard from '@/components/JobCard';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [experienceLevel, setExperienceLevel] = useState('');
+
+  const [jobSources, setJobSources] = useState([
+    { id: 1, name: 'LinkedIn', url: 'https://il.linkedin.com/jobs/mechanical-engineering-student-jobs?keywords=mechanical%20engineer%20student&location=Israel&f_JT=I' },
+    { id: 2, name: 'Glassdoor', url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm' },
+    { id: 3, name: 'AllJobs', url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=' },
+    { id: 4, name: 'JobMaster', url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=' },
+    { id: 5, name: 'Drushim', url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט' },
+    { id: 6, name: 'SQLink', url: 'https://www.sqlink.com/career?search=engineering%20intern&type=internship' },
+    { id: 7, name: 'Intel Israel', url: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel' },
+    { id: 8, name: 'Elbit Systems', url: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/' },
+    { id: 9, name: 'IAI (אלתא)', url: 'https://jobs.iai.co.il/jobs/?tp=משרת%20סטודנט' },
+    { id: 10, name: 'רפאל (Rafael)', url: 'https://career.rafael.co.il/students/' },
+    { id: 11, name: 'HP Careers', url: 'https://jobs.hp.com/us/students-graduates/' },
+    { id: 12, name: 'Applied Materials', url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student' },
+    { id: 13, name: 'Art Medical', url: 'https://artmedical.com/careers/?search=intern' },
+    { id: 14, name: 'Arad Technologies', url: 'https://aradtec.com/careers/?search=student' },
+    { id: 15, name: 'Orbit Technologies', url: 'https://orbit-cs.com/careers/?search=intern' },
+    { id: 16, name: 'Ness Technologies', url: 'https://www.ness.com/careers/?search=intern' },
+    { id: 17, name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
+  ]);
 
   const jobListings = [
     {
@@ -19,10 +40,10 @@ const Index = () => {
       company: 'Rafael Advanced Defense Systems',
       location: 'Haifa',
       type: 'Internship',
-      experience: 'Student',
       posted: '2 days ago',
       description: 'Join our R&D team working on cutting-edge defense technologies. Perfect for mechanical engineering students seeking hands-on experience.',
-      tags: ['CAD', 'SolidWorks', 'R&D', 'Defense Technology']
+      tags: ['CAD', 'SolidWorks', 'R&D', 'Defense Technology'],
+      applyUrl: 'https://career.rafael.co.il/students/'
     },
     {
       id: 2,
@@ -30,10 +51,10 @@ const Index = () => {
       company: 'Elbit Systems',
       location: 'Haifa',
       type: 'Student Job',
-      experience: 'Student',
       posted: '1 week ago',
       description: 'Work on advanced defense and aerospace systems. Gain experience in mechanical design and testing.',
-      tags: ['Aerospace', 'Defense', 'Mechanical Design', 'Testing']
+      tags: ['Aerospace', 'Defense', 'Mechanical Design', 'Testing'],
+      applyUrl: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/'
     },
     {
       id: 3,
@@ -41,10 +62,10 @@ const Index = () => {
       company: 'Intel Israel',
       location: 'Jerusalem',
       type: 'Internship',
-      experience: 'Student',
       posted: '3 days ago',
       description: 'Support manufacturing processes and equipment optimization in our semiconductor facility.',
-      tags: ['Manufacturing', 'Process Engineering', 'Semiconductors']
+      tags: ['Manufacturing', 'Process Engineering', 'Semiconductors'],
+      applyUrl: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel'
     },
     {
       id: 4,
@@ -52,10 +73,10 @@ const Index = () => {
       company: 'Israel Aerospace Industries (IAI)',
       location: 'Ben Gurion Airport',
       type: 'Student Job',
-      experience: 'Student',
       posted: '5 days ago',
       description: 'Join our aerospace engineering team working on aircraft and space systems development.',
-      tags: ['Aerospace', 'Aircraft Design', 'Space Systems']
+      tags: ['Aerospace', 'Aircraft Design', 'Space Systems'],
+      applyUrl: 'https://jobs.iai.co.il/jobs/?tp=משרت%20סטודנט'
     },
     {
       id: 5,
@@ -63,10 +84,10 @@ const Index = () => {
       company: 'Applied Materials',
       location: 'Rehovot',
       type: 'Internship',
-      experience: 'Student',
       posted: '1 week ago',
       description: 'Work on semiconductor manufacturing equipment and process development.',
-      tags: ['R&D', 'Semiconductor Equipment', 'Process Development']
+      tags: ['R&D', 'Semiconductor Equipment', 'Process Development'],
+      applyUrl: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student'
     },
     {
       id: 6,
@@ -74,37 +95,22 @@ const Index = () => {
       company: 'Art Medical',
       location: 'Tel Aviv',
       type: 'Student Job',
-      experience: 'Student',
       posted: '4 days ago',
       description: 'Support the development of innovative medical devices and surgical instruments.',
-      tags: ['Medical Devices', 'Product Development', 'Healthcare']
+      tags: ['Medical Devices', 'Product Development', 'Healthcare'],
+      applyUrl: 'https://artmedical.com/careers/?search=intern'
     }
-  ];
-
-  const jobSources = [
-    { name: 'LinkedIn', url: 'https://il.linkedin.com/jobs/mechanical-engineering-student-jobs?keywords=mechanical%20engineer%20student&location=Israel&f_JT=I' },
-    { name: 'Glassdoor', url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm' },
-    { name: 'AllJobs', url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=' },
-    { name: 'JobMaster', url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=' },
-    { name: 'Drushim', url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט' },
-    { name: 'SQLink', url: 'https://www.sqlink.com/career?search=engineering%20intern&type=internship' },
-    { name: 'Intel Israel', url: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel' },
-    { name: 'Elbit Systems', url: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/' },
-    { name: 'IAI (אלתא)', url: 'https://jobs.iai.co.il/jobs/?tp=משרת%20סטודנט' },
-    { name: 'רפאל (Rafael)', url: 'https://career.rafael.co.il/students/' },
-    { name: 'HP Careers', url: 'https://jobs.hp.com/us/students-graduates/' },
-    { name: 'Applied Materials', url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student' },
-    { name: 'Art Medical', url: 'https://artmedical.com/careers/?search=intern' },
-    { name: 'Arad Technologies', url: 'https://aradtec.com/careers/?search=student' },
-    { name: 'Orbit Technologies', url: 'https://orbit-cs.com/careers/?search=intern' },
-    { name: 'Ness Technologies', url: 'https://www.ness.com/careers/?search=intern' },
-    { name: 'Amarel', url: 'https://www.amarel.net/careers-tags/students/' }
   ];
 
   const israeliCities = [
     'Tel Aviv', 'Jerusalem', 'Haifa', 'Be\'er Sheva', 'Petah Tikva', 
     'Netanya', 'Ashdod', 'Rishon LeZion', 'Ramat Gan', 'Herzliya', 'Rehovot'
   ];
+
+  const handleSearch = () => {
+    console.log('Searching for:', { searchTerm, location, experienceLevel });
+    // Here you can implement actual search logic
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
@@ -118,10 +124,6 @@ const Index = () => {
             <h1 className="text-2xl font-bold bg-israel-gradient bg-clip-text text-transparent">
               MechJobs IL
             </h1>
-          </div>
-          <div className="flex space-x-2">
-            <Button variant="ghost">Sign In</Button>
-            <Button className="bg-israel-gradient text-white hover:opacity-90">Join Now</Button>
           </div>
         </div>
       </header>
@@ -181,7 +183,7 @@ const Index = () => {
                     <SelectItem value="entry">Entry Level</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button className="h-12 bg-israel-gradient text-white hover:opacity-90">
+                <Button className="h-12 bg-israel-gradient text-white hover:opacity-90" onClick={handleSearch}>
                   Search Jobs
                 </Button>
               </div>
@@ -190,26 +192,14 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Job Sources Navigation */}
+      {/* Job Sources Section */}
       <section className="py-12 px-4 bg-white">
         <div className="container mx-auto">
           <h3 className="text-2xl font-bold text-center mb-8">Search Across Top Job Sites</h3>
-          <nav className="w-full bg-gray-50 rounded-lg p-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {jobSources.map((source) => (
-                <a
-                  key={source.name}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center p-3 bg-white rounded-lg border hover:border-primary hover:shadow-md transition-all duration-200 text-sm font-medium text-tech-gray hover:text-primary group"
-                >
-                  <span className="truncate">{source.name}</span>
-                  <ExternalLink className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              ))}
-            </div>
-          </nav>
+          <JobSourceManager 
+            sources={jobSources} 
+            onSourcesChange={setJobSources} 
+          />
         </div>
       </section>
 
@@ -226,95 +216,9 @@ const Index = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {jobListings.map((job) => (
-              <Card key={job.id} className="hover:shadow-lg transition-all duration-300 border-0 bg-white group hover:-translate-y-1">
-                <CardHeader className="pb-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg mb-2 group-hover:text-primary transition-colors">
-                        {job.title}
-                      </CardTitle>
-                      <div className="flex items-center space-x-2 text-tech-gray mb-2">
-                        <Building className="w-4 h-4" />
-                        <span className="font-medium">{job.company}</span>
-                      </div>
-                      <div className="flex items-center space-x-4 text-sm text-tech-gray">
-                        <div className="flex items-center space-x-1">
-                          <MapPin className="w-3 h-3" />
-                          <span>{job.location}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{job.posted}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <Badge 
-                      variant={job.type === 'Internship' ? 'secondary' : 'default'}
-                      className={job.type === 'Internship' ? 'bg-orange-100 text-accent' : job.type === 'Student Job' ? 'bg-blue-100 text-primary' : ''}
-                    >
-                      {job.type}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-tech-gray text-sm mb-4">
-                    {job.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {job.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex justify-end">
-                    <Button size="sm" className="bg-israel-gradient text-white hover:opacity-90">
-                      Apply Now
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
-
-          <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
-              View All Jobs
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="animate-fade-in">
-              <div className="text-3xl font-bold text-primary mb-2">200+</div>
-              <div className="text-tech-gray">Active Positions</div>
-            </div>
-            <div className="animate-fade-in">
-              <div className="text-3xl font-bold text-accent mb-2">50+</div>
-              <div className="text-tech-gray">Israeli Companies</div>
-            </div>
-            <div className="animate-fade-in">
-              <div className="text-3xl font-bold text-primary mb-2">1,000+</div>
-              <div className="text-tech-gray">Students Placed</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-israel-gradient text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl font-bold mb-6">Start Your Engineering Career Today</h3>
-          <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
-            Join mechanical engineering students finding opportunities at Israel's leading technology companies
-          </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-gray-100">
-            Browse All Jobs
-          </Button>
         </div>
       </section>
 
