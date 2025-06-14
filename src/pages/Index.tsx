@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
 import { Briefcase } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
@@ -27,63 +26,43 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-israel-gradient rounded-lg flex items-center justify-center">
-              <Briefcase className="w-5 h-5 text-white" />
+      {/* Centered Main Content */}
+      <div className="container mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="w-12 h-12 bg-israel-gradient rounded-xl flex items-center justify-center">
+              <Briefcase className="w-7 h-7 text-white" />
             </div>
-            <h1 className="text-2xl font-bold bg-israel-gradient bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-israel-gradient bg-clip-text text-transparent">
               MechJobs IL
             </h1>
           </div>
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6 animate-fade-in">
-            Find{' '}
-            <span className="bg-israel-gradient bg-clip-text text-transparent">
-              Mechanical Engineering Jobs
-            </span>{' '}
-            in Israel
+          
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Find Jobs for Mechanical Engineering Students in Israel
           </h2>
-          <p className="text-lg text-tech-gray mb-12 max-w-2xl mx-auto animate-slide-up">
-            Connect with top Israeli companies seeking mechanical engineering students and professionals across all locations in Israel.
+          
+          <p className="text-lg text-tech-gray max-w-2xl mx-auto">
+            Your one-stop destination to discover opportunities at top Israeli companies
           </p>
         </div>
-      </section>
 
-      {/* Job Sources Section */}
-      <section className="py-12 px-4 bg-white">
-        <div className="container mx-auto">
-          <h3 className="text-2xl font-bold text-center mb-8">Search Across Top Job Sites</h3>
+        {/* Job Sources - Centralized */}
+        <div className="max-w-6xl mx-auto">
           <JobSourceManager 
             sources={jobSources} 
             onSourcesChange={setJobSources} 
           />
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-israel-gradient rounded-lg flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-white" />
-              </div>
-              <h4 className="text-xl font-bold">MechJobs IL</h4>
-            </div>
-            <p className="text-gray-400 text-center">
-              &copy; 2024 MechJobs IL. Connecting Israeli mechanical engineering students with opportunities.
-            </p>
-          </div>
+        {/* Simple Footer */}
+        <div className="text-center mt-16 pt-8 border-t border-gray-200">
+          <p className="text-tech-gray">
+            &copy; 2024 MechJobs IL - Connecting Mechanical Engineering Students with Opportunities
+          </p>
         </div>
-      </footer>
+      </div>
     </div>
   );
 };
