@@ -1,99 +1,128 @@
-
 import { useState, useEffect } from 'react';
+import { useLocalStorage } from 'react-use';
+import { useForm } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
-  const defaultSources = [{const defaultSources = [
+  const defaultSources = [
     {
       id: 1,
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true',
-    }    {
+    },
+    {
       id: 2,
       name: 'Glassdoor',
       url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm',
-    }    {
+    },
+    {
       id: 3,
       name: 'AllJobs',
       url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=',
-    }    {
+    },
+    {
       id: 4,
       name: 'JobMaster',
       url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=',
-    }    {
+    },
+    {
       id: 5,
       name: 'Drushim',
       url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט',
-    }    {
-      id: 6,
+    },
+    {
+      id: 7,
       name: 'SQLink',
       url: 'https://www.sqlink.com/career?search=engineering%20intern&type=internship',
-    }    {
-      id: 7,
+    },
+    {
+      id: 8,
       name: 'Intel Israel',
       url: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel',
-    }    {
-      id: 8,
+    },
+    {
+      id: 9,
       name: 'Elbit Systems',
       url: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/',
-    }    {
-      id: 9,
+    },
+    {
+      id: 10,
       name: 'IAI (אלתא)',
       url: 'https://jobs.iai.co.il/jobs/?tp=משרת%20סטודנט',
-    }    {
-      id: 10,
+    },
+    {
+      id: 11,
       name: 'רפאל (Rafael)',
       url: 'https://career.rafael.co.il/students/',
-    }    {
-      id: 11,
+    },
+    {
+      id: 12,
       name: 'HP Careers',
       url: 'https://jobs.hp.com/us/students-graduates/',
-    }    {
-      id: 12,
+    },
+    {
+      id: 13,
       name: 'Applied Materials',
       url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student',
-    }    {
+    },
+    {
       id: 13,
       name: 'Art Medical',
       url: 'https://artmedical.com/careers/?search=intern',
-    }    {
-      id: 14,
+    },
+    {
+      id: 15,
       name: 'Arad Technologies',
       url: 'https://aradtec.com/careers/?search=student',
-    }    {
-      id: 15,
-      name: 'Orbit Technologies',
-      url: 'https://orbit-cs.com/careers/?search=intern',
-    }    {
+    },
+    {
       id: 16,
       name: 'Ness Technologies',
       url: 'https://www.ness.com/careers/?search=intern',
-    }    {
-      id: 17,
+    },
+    {
+      id: 16,
       name: 'Amarel',
       url: 'https://www.amarel.net/careers-tags/students/',
-    }    {
+    },
+    {
       id: 1750170556357,
       name: '1',
       url: '1'
     }
   ];
 
+  const { register, handleSubmit, reset } = useForm();
+
+  const onSubmit = (data: any) => {
+    const newSource = {
+      id: uuidv4(),
+      name: data.name,
+      url: data.url
+    };
+
+    const newJobSources = [...jobSources, newSource];
+    const newSourceData = {
+      id: newSource.id,
+      name: newSource.name,
+      url: newSource.url,
+    };
+    setJobSources(newJobSources);
+    // Save to local storage
+    localStorage.setItem('jobSources', JSON.stringify(newJobSources));
+    reset();
+  };
+
   const [jobSources, setJobSources] = useState(defaultSources);
 
-  const handleSourcesChange = (newSources: typeof jobSources) => {
-    console.log('Sources changed:', newSources);
-    setJobSources(newSources);
-    
-    // Generate code to update the defaultSources array
-    const sourcesCode = newSources.map((source, index) => 
-      `  ${index === 0 ? '' : ', '}{\n    id: ${source.id},\n    name: '${source.name.replace(/'/g, "\\'")}',\n    url: '${source.url.replace(/'/g, "\\'")}'\n  }`
-    ).join('');
-    
-    console.log('To make these sources permanent, replace the defaultSources array in Index.tsx with:');
-    console.log(`const defaultSources = [${sourcesCode}];`);
-  };
+  useEffect(() => {
+    const storedSources = localStorage.getItem('jobSources');
+    if (storedSources) {
+      setJobSources(JSON.parse(storedSources));
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50" dir="rtl">
@@ -121,8 +150,20 @@ const Index = () => {
 
         {/* Job Sources - Centralized */}
         <div className="max-w-6xl mx-auto">
-          <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
+          <JobSourceManager sources={jobSources} />
         </div>
+
+        {/* Input fields for new source */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input type="text" placeholder="Source Name" {...register("name")} />
+          <input type="text" placeholder="Source URL" {...register("url")} />
+          <button type="submit">Add Source</button>
+        </form>
+
+        {/* Reset form on submit (crucial for preventing multiple submissions) */}
+        <button type="button" onClick={() => reset()}>
+          Clear Form
+        </button>
 
         {/* Simple Footer */}
         <div className="text-center mt-16 pt-8 border-t border-gray-200">
