@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
-import { Briefcase } from 'lucide-react';
-import JobSourceManager from '@/components/JobSourceManager';
+import { v4 as uuidv4 } from 'uuid'
+import { Briefcase } from 'lucide-react'
+import JobSourceManager from '@/components/JobSourceManager'
+import ThemeToggle from '@/components/ThemeToggle'
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 
 const Index = () => {
@@ -138,7 +139,10 @@ const Index = () => {
       {/* Centered Main Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 relative">
+          <div className="absolute left-4 top-4">
+            <ThemeToggle />
+          </div>
           <div className="flex items-center justify-center space-x-3 space-x-reverse mb-6">
             <div className="w-12 h-12 bg-israel-gradient rounded-xl flex items-center justify-center">
               <Briefcase className="w-7 h-7 text-white" />
