@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +27,11 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { toast } = useToast();
 
+  // Sync editingSources with sources prop when it changes
+  useEffect(() => {
+    setEditingSources(sources);
+  }, [sources]);
+
   const handlePasswordSubmit = () => {
     if (password === 'afeka') {
       setIsAuthenticated(true);
@@ -49,7 +55,6 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   const handleManageClick = () => {
     if (isEditing && isAuthenticated) {
       setIsEditing(false);
-      setEditingSources(sources);
       setNewSource({ name: '', url: '' });
     } else if (isAuthenticated) {
       setIsEditing(true);
@@ -65,23 +70,36 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
         name: newSource.name,
         url: newSource.url
       };
-      setEditingSources([...editingSources, newSourceWithId]);
+      const updatedSources = [...editingSources, newSourceWithId];
+      setEditingSources(updatedSources);
+      onSourcesChange(updatedSources); // Persist immediately
       setNewSource({ name: '', url: '' });
+      toast({
+        title: "מקור נוסף",
+        description: "המקור החדש נוסף בהצלחה.",
+      });
     }
   };
 
   const handleDeleteSource = (id: number) => {
-    setEditingSources(editingSources.filter(source => source.id !== id));
+    const updatedSources = editingSources.filter(source => source.id !== id);
+    setEditingSources(updatedSources);
+    onSourcesChange(updatedSources); // Persist immediately
+    toast({
+      title: "מקור נמחק",
+      description: "המקור נמחק בהצלחה.",
+    });
   };
 
   const handleUpdateSource = (id: number, field: 'name' | 'url', value: string) => {
-    setEditingSources(editingSources.map(source => 
+    const updatedSources = editingSources.map(source => 
       source.id === id ? { ...source, [field]: value } : source
-    ));
+    );
+    setEditingSources(updatedSources);
+    onSourcesChange(updatedSources); // Persist immediately
   };
 
   const handleSave = () => {
-    onSourcesChange(editingSources);
     setIsEditing(false);
     toast({
       title: "שינויים נשמרו",
@@ -107,7 +125,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
               className="flex items-center gap-2"
             >
               {isEditing && isAuthenticated ? <Edit className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-              {isEditing && isAuthenticated ? 'ביטול' : 'ניהול מקורות'}
+              {isEditing && isAuthenticated ? 'סיום עריכה' : 'ניהול מקורות'}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
@@ -193,7 +211,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleSave}>שמור שינויים</Button>
+              <Button onClick={handleSave}>סיום עריכה</Button>
               <Button variant="outline" onClick={handleCancel}>ביטול</Button>
             </div>
           </div>
