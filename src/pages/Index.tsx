@@ -89,36 +89,6 @@ const Index = () => {
       name: 'Amarel',
       url: 'https://www.amarel.net/careers-tags/students/',
     },
-    {
-      id: '1750170556357',
-      name: '1',
-      url: '1',
-    },
-    {
-      id: '069cfeaa-bd83-4dcd-8659-cc32d1a86d4c',
-      name: '2',
-      url: '2',
-    },
-    {
-      id: 'be0bbc41-0e62-4f4e-b50b-c9e99fa7089d',
-      name: '4',
-      url: '4',
-    },
-    {
-      id: '4309f3c8-72d9-437e-9d24-b8faa7532dbd',
-      name: '3',
-      url: '3',
-    },
-    {
-      id: 'b9880f0e-5616-4f06-b818-02b531bb86f8',
-      name: '2',
-      url: '2',
-    },
-    {
-      id: '1750173059223',
-      name: '1',
-      url: '1',
-    },
   ];
 
   const { register, handleSubmit, reset } = useForm();
