@@ -85,6 +85,11 @@ const Index = () => {
       name: 'Amarel',
       url: 'https://www.amarel.net/careers-tags/students/',
     },
+    {
+      id: '18',
+      name: 'TAT Technologies',
+      url: 'https://apply.workable.com/tat-technologies-ltd/',
+    },
   ];
 
 
