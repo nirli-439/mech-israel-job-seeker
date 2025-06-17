@@ -74,35 +74,19 @@ const Index = () => {
     url: 'https://www.amarel.net/careers-tags/students/'
   }];
 
-  // Load sources from localStorage or use defaults
-  const [jobSources, setJobSources] = useState(() => {
-    try {
-      const savedSources = localStorage.getItem('mechjobs-sources');
-      if (savedSources) {
-        const parsed = JSON.parse(savedSources);
-        console.log('Loaded sources from localStorage:', parsed);
-        return parsed;
-      }
-    } catch (error) {
-      console.error('Error loading sources from localStorage:', error);
-    }
-    console.log('Using default sources');
-    return defaultSources;
-  });
-
-  // Save to localStorage whenever sources change
-  useEffect(() => {
-    try {
-      localStorage.setItem('mechjobs-sources', JSON.stringify(jobSources));
-      console.log('Saved sources to localStorage:', jobSources);
-    } catch (error) {
-      console.error('Error saving sources to localStorage:', error);
-    }
-  }, [jobSources]);
+  const [jobSources, setJobSources] = useState(defaultSources);
 
   const handleSourcesChange = (newSources: typeof jobSources) => {
-    console.log('Sources changed, updating state and localStorage:', newSources);
+    console.log('Sources changed:', newSources);
     setJobSources(newSources);
+    
+    // Generate code to update the defaultSources array
+    const sourcesCode = newSources.map((source, index) => 
+      `  ${index === 0 ? '' : ', '}{\n    id: ${source.id},\n    name: '${source.name.replace(/'/g, "\\'")}',\n    url: '${source.url.replace(/'/g, "\\'")}'\n  }`
+    ).join('');
+    
+    console.log('To make these sources permanent, replace the defaultSources array in Index.tsx with:');
+    console.log(`const defaultSources = [${sourcesCode}];`);
   };
 
   return (
