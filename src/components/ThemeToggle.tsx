@@ -2,8 +2,13 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
-const ThemeToggle = () => {
+interface ThemeToggleProps {
+  className?: string;
+}
+
+const ThemeToggle = ({ className }: ThemeToggleProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -16,7 +21,7 @@ const ThemeToggle = () => {
   const isDark = resolvedTheme === "dark";
 
   return (
-    <div className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex items-center gap-2">
+    <div className={cn("fixed left-4 top-1/2 -translate-y-1/2 z-50 flex items-center gap-2", className)}>
       <Sun className="h-4 w-4" />
       <Switch
         checked={isDark}
