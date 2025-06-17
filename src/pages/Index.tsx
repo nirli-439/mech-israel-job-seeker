@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
-import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
+import type { JobSource } from '@/services/jobSourcesService';
 
 const Index = () => {
   const defaultSources = [
@@ -99,7 +99,6 @@ const Index = () => {
   const handleSourcesChange = (sources: JobSource[]) => {
     setJobSources(sources);
     localStorage.setItem('jobSources', JSON.stringify(sources));
-    saveSourcesGlobally(sources).catch(console.error);
   };
 
   const onSubmit = (data: NewSourceForm) => {
@@ -117,19 +116,8 @@ const Index = () => {
   const [jobSources, setJobSources] = useState(defaultSources);
 
   useEffect(() => {
-    loadSourcesGlobally()
-      .then((data) => {
-        if (data && data.length) {
-          setJobSources(data);
-        } else {
-          const storedSources = localStorage.getItem('jobSources');
-          if (storedSources) setJobSources(JSON.parse(storedSources));
-        }
-      })
-      .catch(() => {
-        const storedSources = localStorage.getItem('jobSources');
-        if (storedSources) setJobSources(JSON.parse(storedSources));
-      });
+    const storedSources = localStorage.getItem('jobSources');
+    if (storedSources) setJobSources(JSON.parse(storedSources));
   }, []);
 
 
