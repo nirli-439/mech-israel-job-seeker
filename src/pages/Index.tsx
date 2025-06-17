@@ -1,97 +1,124 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from 'react-use';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const Index = () => {
   const defaultSources = [
     {
-      id: 1,
+      id: '1',
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true',
     },
     {
-      id: 2,
+      id: '2',
       name: 'Glassdoor',
       url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm',
     },
     {
-      id: 3,
+      id: '3',
       name: 'AllJobs',
       url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=',
     },
     {
-      id: 4,
+      id: '4',
       name: 'JobMaster',
       url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=',
     },
     {
-      id: 5,
+      id: '5',
       name: 'Drushim',
       url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט',
     },
     {
-      id: 7,
+      id: '7',
       name: 'SQLink',
       url: 'https://www.sqlink.com/career?search=engineering%20intern&type=internship',
     },
     {
-      id: 8,
+      id: '8',
       name: 'Intel Israel',
       url: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel',
     },
     {
-      id: 9,
+      id: '9',
       name: 'Elbit Systems',
       url: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/',
     },
     {
-      id: 10,
+      id: '10',
       name: 'IAI (אלתא)',
       url: 'https://jobs.iai.co.il/jobs/?tp=משרת%20סטודנט',
     },
     {
-      id: 11,
+      id: '11',
       name: 'רפאל (Rafael)',
       url: 'https://career.rafael.co.il/students/',
     },
     {
-      id: 12,
+      id: '12',
       name: 'HP Careers',
       url: 'https://jobs.hp.com/us/students-graduates/',
     },
     {
-      id: 13,
+      id: '13',
       name: 'Applied Materials',
       url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student',
     },
     {
-      id: 13,
+      id: '14',
       name: 'Art Medical',
       url: 'https://artmedical.com/careers/?search=intern',
     },
     {
-      id: 15,
+      id: '15',
       name: 'Arad Technologies',
       url: 'https://aradtec.com/careers/?search=student',
     },
     {
-      id: 16,
+      id: '16',
       name: 'Ness Technologies',
       url: 'https://www.ness.com/careers/?search=intern',
     },
     {
-      id: 16,
+      id: '17',
       name: 'Amarel',
       url: 'https://www.amarel.net/careers-tags/students/',
     },
     {
-      id: 1750170556357,
+      id: '1750170556357',
       name: '1',
-      url: '1'
-    }
+      url: '1',
+    },
+    {
+      id: '069cfeaa-bd83-4dcd-8659-cc32d1a86d4c',
+      name: '2',
+      url: '2',
+    },
+    {
+      id: 'be0bbc41-0e62-4f4e-b50b-c9e99fa7089d',
+      name: '4',
+      url: '4',
+    },
+    {
+      id: '4309f3c8-72d9-437e-9d24-b8faa7532dbd',
+      name: '3',
+      url: '3',
+    },
+    {
+      id: 'b9880f0e-5616-4f06-b818-02b531bb86f8',
+      name: '2',
+      url: '2',
+    },
+    {
+      id: '1750173059223',
+      name: '1',
+      url: '1',
+    },
   ];
 
   const { register, handleSubmit, reset } = useForm();
@@ -124,6 +151,17 @@ const Index = () => {
     }
   }, []);
 
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return;
+
+    const items = Array.from(jobSources);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setJobSources(items);
+    localStorage.setItem('jobSources', JSON.stringify(items));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50" dir="rtl">
       {/* Centered Main Content */}
@@ -150,15 +188,37 @@ const Index = () => {
 
         {/* Job Sources - Centralized */}
         <div className="max-w-6xl mx-auto">
-          <JobSourceManager sources={jobSources} />
+          <JobSourceManager sources={jobSources} onSourcesChange={setJobSources} />
         </div>
 
         {/* Input fields for new source */}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <input type="text" placeholder="Source Name" {...register("name")} />
-          <input type="text" placeholder="Source URL" {...register("url")} />
-          <button type="submit">Add Source</button>
-        </form>
+        <div className="mt-4 space-y-4 relative">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="relative">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Source Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Source Name"
+                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                {...register("name", { required: true })}
+                dir="rtl"
+              />
+            </div>
+            <div>
+              <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                Source URL
+              </label>
+              <input type="text" placeholder="כתובת אתר" name="url" className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" {...register("url")} dir="rtl" />
+            </div>
+            <div>
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Source</button>
+            </div>
+          </form>
+        </div>
 
         {/* Reset form on submit (crucial for preventing multiple submissions) */}
         <button type="button" onClick={() => reset()}>
