@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,8 +28,15 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   // Sync editingSources with sources prop when it changes
   useEffect(() => {
+    console.log('Sources updated:', sources);
     setEditingSources(sources);
   }, [sources]);
+
+  // Debug log for current state
+  useEffect(() => {
+    console.log('Current editingSources:', editingSources);
+    console.log('Current sources prop:', sources);
+  }, [editingSources, sources]);
 
   const handlePasswordSubmit = () => {
     if (password === 'afeka') {
@@ -71,6 +77,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
         url: newSource.url
       };
       const updatedSources = [...editingSources, newSourceWithId];
+      console.log('Adding new source:', newSourceWithId);
+      console.log('Updated sources array:', updatedSources);
+      
       setEditingSources(updatedSources);
       onSourcesChange(updatedSources); // Persist immediately
       setNewSource({ name: '', url: '' });
@@ -83,6 +92,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   const handleDeleteSource = (id: number) => {
     const updatedSources = editingSources.filter(source => source.id !== id);
+    console.log('Deleting source with id:', id);
+    console.log('Updated sources after deletion:', updatedSources);
+    
     setEditingSources(updatedSources);
     onSourcesChange(updatedSources); // Persist immediately
     toast({
@@ -95,6 +107,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     const updatedSources = editingSources.map(source => 
       source.id === id ? { ...source, [field]: value } : source
     );
+    console.log('Updating source:', id, field, value);
+    console.log('Updated sources after edit:', updatedSources);
+    
     setEditingSources(updatedSources);
     onSourcesChange(updatedSources); // Persist immediately
   };
