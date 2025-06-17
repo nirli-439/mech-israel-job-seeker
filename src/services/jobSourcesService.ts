@@ -2,8 +2,10 @@
 // This service shows how to implement global source management with a backend
 // Currently commented out since this is a static app without Supabase integration
 
-interface JobSource {
-  id: number;
+import { supabase } from './supabaseClient';
+
+export interface JobSource {
+  id: string;
   name: string;
   url: string;
 }
@@ -23,22 +25,20 @@ export const updateSourcesInCode = (sources: JobSource[]) => {
   return fullCode;
 };
 
-// For backend-enabled apps (when Supabase is connected)
-/*
+// Backend helpers using Supabase
 export const saveSourcesGlobally = async (sources: JobSource[]) => {
   try {
-    // This would save to Supabase database
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('job_sources')
-      .upsert(sources.map(source => ({
-        id: source.id,
-        name: source.name,
-        url: source.url,
-        updated_at: new Date().toISOString()
-      })));
-    
+      .upsert(
+        sources.map((source) => ({
+          id: source.id,
+          name: source.name,
+          url: source.url,
+          updated_at: new Date().toISOString(),
+        }))
+      );
     if (error) throw error;
-    return data;
   } catch (error) {
     console.error('Error saving sources globally:', error);
     throw error;
@@ -47,21 +47,20 @@ export const saveSourcesGlobally = async (sources: JobSource[]) => {
 
 export const loadSourcesGlobally = async (): Promise<JobSource[]> => {
   try {
-    // This would load from Supabase database
     const { data, error } = await supabase
       .from('job_sources')
       .select('*')
       .order('id');
-    
     if (error) throw error;
-    return data || [];
+    return (data as JobSource[]) || [];
   } catch (error) {
     console.error('Error loading sources globally:', error);
     throw error;
   }
 };
-*/
 
 export default {
-  updateSourcesInCode
+  updateSourcesInCode,
+  saveSourcesGlobally,
+  loadSourcesGlobally,
 };

@@ -6,7 +6,7 @@ import { Code, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface JobSource {
-  id: number;
+  id: string;
   name: string;
   url: string;
 }
@@ -19,8 +19,8 @@ const SourceCodeUpdater: React.FC<SourceCodeUpdaterProps> = ({ sources }) => {
   const { toast } = useToast();
 
   const generateSourceCode = () => {
-    const sourcesCode = sources.map((source, index) => 
-      `    {\n      id: ${source.id},\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}'${index === sources.length - 1 ? '' : ','}\n    }`
+    const sourcesCode = sources.map((source, index) =>
+      `    {\n      id: '${source.id}',\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}'${index === sources.length - 1 ? '' : ','}\n    }`
     ).join('');
     
     return `const defaultSources = [\n${sourcesCode}\n  ];`;

@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import SourceCodeUpdater from './SourceCodeUpdater';
 
 interface JobSource {
-  id: number;
+  id: string;
   name: string;
   url: string;
 }
@@ -30,15 +30,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   // Sync editingSources with sources prop when it changes
   useEffect(() => {
-    console.log('Sources updated:', sources);
     setEditingSources(sources);
   }, [sources]);
 
-  // Debug log for current state
-  useEffect(() => {
-    console.log('Current editingSources:', editingSources);
-    console.log('Current sources prop:', sources);
-  }, [editingSources, sources]);
 
   const handlePasswordSubmit = () => {
     if (password === 'afeka') {
@@ -74,13 +68,11 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
   const handleAddSource = () => {
     if (newSource.name && newSource.url) {
       const newSourceWithId = {
-        id: Date.now(),
+        id: Date.now().toString(),
         name: newSource.name,
         url: newSource.url
       };
       const updatedSources = [...editingSources, newSourceWithId];
-      console.log('Adding new source:', newSourceWithId);
-      console.log('Updated sources array:', updatedSources);
       
       setEditingSources(updatedSources);
       onSourcesChange(updatedSources);
@@ -93,10 +85,8 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     }
   };
 
-  const handleDeleteSource = (id: number) => {
+  const handleDeleteSource = (id: string) => {
     const updatedSources = editingSources.filter(source => source.id !== id);
-    console.log('Deleting source with id:', id);
-    console.log('Updated sources after deletion:', updatedSources);
     
     setEditingSources(updatedSources);
     onSourcesChange(updatedSources);
@@ -107,12 +97,10 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     });
   };
 
-  const handleUpdateSource = (id: number, field: 'name' | 'url', value: string) => {
+  const handleUpdateSource = (id: string, field: 'name' | 'url', value: string) => {
     const updatedSources = editingSources.map(source => 
       source.id === id ? { ...source, [field]: value } : source
     );
-    console.log('Updating source:', id, field, value);
-    console.log('Updated sources after edit:', updatedSources);
     
     setEditingSources(updatedSources);
     onSourcesChange(updatedSources);
