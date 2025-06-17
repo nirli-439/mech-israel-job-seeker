@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useLocalStorage } from 'react-use';
-import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
+import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 
 const Index = () => {
   const defaultSources = [
@@ -91,9 +89,20 @@ const Index = () => {
     },
   ];
 
-  const { register, handleSubmit, reset } = useForm();
+  interface NewSourceForm {
+    name: string;
+    url: string;
+  }
 
-  const onSubmit = (data: any) => {
+  const { register, handleSubmit, reset } = useForm<NewSourceForm>();
+
+  const handleSourcesChange = (sources: JobSource[]) => {
+    setJobSources(sources);
+    localStorage.setItem('jobSources', JSON.stringify(sources));
+    saveSourcesGlobally(sources).catch(console.error);
+  };
+
+  const onSubmit = (data: NewSourceForm) => {
     const newSource = {
       id: uuidv4(),
       name: data.name,
@@ -101,36 +110,28 @@ const Index = () => {
     };
 
     const newJobSources = [...jobSources, newSource];
-    const newSourceData = {
-      id: newSource.id,
-      name: newSource.name,
-      url: newSource.url,
-    };
-    setJobSources(newJobSources);
-    // Save to local storage
-    localStorage.setItem('jobSources', JSON.stringify(newJobSources));
+    handleSourcesChange(newJobSources);
     reset();
   };
 
   const [jobSources, setJobSources] = useState(defaultSources);
 
   useEffect(() => {
-    const storedSources = localStorage.getItem('jobSources');
-    if (storedSources) {
-      setJobSources(JSON.parse(storedSources));
-    }
+    loadSourcesGlobally()
+      .then((data) => {
+        if (data && data.length) {
+          setJobSources(data);
+        } else {
+          const storedSources = localStorage.getItem('jobSources');
+          if (storedSources) setJobSources(JSON.parse(storedSources));
+        }
+      })
+      .catch(() => {
+        const storedSources = localStorage.getItem('jobSources');
+        if (storedSources) setJobSources(JSON.parse(storedSources));
+      });
   }, []);
 
-  const handleOnDragEnd = (result: any) => {
-    if (!result.destination) return;
-
-    const items = Array.from(jobSources);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setJobSources(items);
-    localStorage.setItem('jobSources', JSON.stringify(items));
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50" dir="rtl">
@@ -158,7 +159,7 @@ const Index = () => {
 
         {/* Job Sources - Centralized */}
         <div className="max-w-6xl mx-auto">
-          <JobSourceManager sources={jobSources} onSourcesChange={setJobSources} />
+          <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
         </div>
 
         {/* Input fields for new source */}
