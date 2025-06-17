@@ -72,19 +72,3 @@ To connect a domain, navigate to Project > Settings > Domains and click Connect 
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
-## Persisting data with Supabase
-
-This app can store the job source list in a Supabase table. Without these
-settings the list is only kept in your browser's `localStorage`.
-
-1. [Create a Supabase project](https://app.supabase.com/) and copy the **Project URL** and **Anon Key**.
-2. Create a table called `job_sources` with columns:
-   - `id` (text, primary key)
-   - `name` (text)
-   - `url` (text)
-   - `updated_at` (timestamp)
-3. Duplicate `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-   In Lovable you can set these under **Project → Settings → Environment**.
-
-When these variables are provided, edits to the sources list will be saved to
-Supabase and loaded across devices.

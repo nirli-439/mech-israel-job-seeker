@@ -1,8 +1,6 @@
 
-// This service shows how to implement global source management with a backend
-// Currently commented out since this is a static app without Supabase integration
-
-import { supabase } from './supabaseClient';
+// Basic helpers for managing job sources locally. The original version of this
+// file included Supabase integration which has been removed.
 
 export interface JobSource {
   id: string;
@@ -25,46 +23,16 @@ export const updateSourcesInCode = (sources: JobSource[]) => {
   return fullCode;
 };
 
-// Backend helpers using Supabase
+// Previously these functions saved and loaded sources using Supabase. They are
+// now simple wrappers around browser `localStorage` so the data persists only
+// for the current user.
 export const saveSourcesGlobally = async (sources: JobSource[]) => {
-  if (!supabase) {
-    console.warn('Supabase credentials not provided. Skipping global save.');
-    return;
-  }
-  try {
-    const { error } = await supabase
-      .from('job_sources')
-      .upsert(
-        sources.map((source) => ({
-          id: source.id,
-          name: source.name,
-          url: source.url,
-          updated_at: new Date().toISOString(),
-        }))
-      );
-    if (error) throw error;
-  } catch (error) {
-    console.error('Error saving sources globally:', error);
-    throw error;
-  }
+  localStorage.setItem('jobSources', JSON.stringify(sources));
 };
 
 export const loadSourcesGlobally = async (): Promise<JobSource[]> => {
-  if (!supabase) {
-    console.warn('Supabase credentials not provided. Skipping global load.');
-    return [];
-  }
-  try {
-    const { data, error } = await supabase
-      .from('job_sources')
-      .select('*')
-      .order('id');
-    if (error) throw error;
-    return (data as JobSource[]) || [];
-  } catch (error) {
-    console.error('Error loading sources globally:', error);
-    throw error;
-  }
+  const stored = localStorage.getItem('jobSources');
+  return stored ? JSON.parse(stored) : [];
 };
 
 export default {
