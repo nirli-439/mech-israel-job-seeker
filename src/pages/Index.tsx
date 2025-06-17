@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
@@ -89,12 +87,6 @@ const Index = () => {
     },
   ];
 
-  interface NewSourceForm {
-    name: string;
-    url: string;
-  }
-
-  const { register, handleSubmit, reset } = useForm<NewSourceForm>();
 
   const handleSourcesChange = (sources: JobSource[]) => {
     setJobSources(sources);
@@ -102,17 +94,6 @@ const Index = () => {
     saveSourcesGlobally(sources).catch(console.error);
   };
 
-  const onSubmit = (data: NewSourceForm) => {
-    const newSource = {
-      id: uuidv4(),
-      name: data.name,
-      url: data.url
-    };
-
-    const newJobSources = [...jobSources, newSource];
-    handleSourcesChange(newJobSources);
-    reset();
-  };
 
   const [jobSources, setJobSources] = useState(defaultSources);
 
@@ -162,39 +143,7 @@ const Index = () => {
           <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
         </div>
 
-        {/* Input fields for new source */}
-        <div className="mt-4 space-y-4 relative">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="relative">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Source Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="Source Name"
-                className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                {...register("name", { required: true })}
-                dir="rtl"
-              />
-            </div>
-            <div>
-              <label htmlFor="url" className="block text-sm font-medium text-gray-700">
-                Source URL
-              </label>
-              <input type="text" placeholder="כתובת אתר" name="url" className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" {...register("url")} dir="rtl" />
-            </div>
-            <div>
-              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Source</button>
-            </div>
-          </form>
-        </div>
-
-        {/* Reset form on submit (crucial for preventing multiple submissions) */}
-        <button type="button" onClick={() => reset()}>
-          Clear Form
-        </button>
+        {/* Sources are managed above */}
 
         {/* Simple Footer */}
         <div className="text-center mt-16 pt-8 border-t border-gray-200">
