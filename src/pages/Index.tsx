@@ -1,9 +1,10 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
 
 const Index = () => {
-  const [jobSources, setJobSources] = useState([{
+  const defaultSources = [{
     id: 1,
     name: 'LinkedIn',
     url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true'
@@ -71,7 +72,39 @@ const Index = () => {
     id: 17,
     name: 'Amarel',
     url: 'https://www.amarel.net/careers-tags/students/'
-  }]);
+  }];
+
+  // Load sources from localStorage or use defaults
+  const [jobSources, setJobSources] = useState(() => {
+    try {
+      const savedSources = localStorage.getItem('mechjobs-sources');
+      if (savedSources) {
+        const parsed = JSON.parse(savedSources);
+        console.log('Loaded sources from localStorage:', parsed);
+        return parsed;
+      }
+    } catch (error) {
+      console.error('Error loading sources from localStorage:', error);
+    }
+    console.log('Using default sources');
+    return defaultSources;
+  });
+
+  // Save to localStorage whenever sources change
+  useEffect(() => {
+    try {
+      localStorage.setItem('mechjobs-sources', JSON.stringify(jobSources));
+      console.log('Saved sources to localStorage:', jobSources);
+    } catch (error) {
+      console.error('Error saving sources to localStorage:', error);
+    }
+  }, [jobSources]);
+
+  const handleSourcesChange = (newSources: typeof jobSources) => {
+    console.log('Sources changed, updating state and localStorage:', newSources);
+    setJobSources(newSources);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50" dir="rtl">
       {/* Centered Main Content */}
@@ -98,7 +131,7 @@ const Index = () => {
 
         {/* Job Sources - Centralized */}
         <div className="max-w-6xl mx-auto">
-          <JobSourceManager sources={jobSources} onSourcesChange={setJobSources} />
+          <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
         </div>
 
         {/* Simple Footer */}
