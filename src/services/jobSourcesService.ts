@@ -27,6 +27,10 @@ export const updateSourcesInCode = (sources: JobSource[]) => {
 
 // Backend helpers using Supabase
 export const saveSourcesGlobally = async (sources: JobSource[]) => {
+  if (!supabase) {
+    console.warn('Supabase credentials not provided. Skipping global save.');
+    return;
+  }
   try {
     const { error } = await supabase
       .from('job_sources')
@@ -46,6 +50,10 @@ export const saveSourcesGlobally = async (sources: JobSource[]) => {
 };
 
 export const loadSourcesGlobally = async (): Promise<JobSource[]> => {
+  if (!supabase) {
+    console.warn('Supabase credentials not provided. Skipping global load.');
+    return [];
+  }
   try {
     const { data, error } = await supabase
       .from('job_sources')
