@@ -1,0 +1,22 @@
+backend:
+  name: git-gateway
+  branch: main
+local_backend: true
+media_folder: "public/uploads"
+public_folder: "/uploads"
+collections:
+  - name: "job_sources"
+    label: "Job Sources"
+    files:
+      - file: "public/data/job-sources.json"
+        label: "Job Sources List"
+        name: "job_sources"
+        format: "json"
+        fields:
+          - name: "jobSources"
+            label: "Sources"
+            widget: list
+            fields:
+              - { name: "id", label: "ID", widget: string }
+              - { name: "name", label: "Name", widget: string }
+              - { name: "url", label: "URL", widget: string }
