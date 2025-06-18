@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Briefcase } from 'lucide-react';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
+import { isUsingDatabase } from '@/services/supabaseClient';
 
 const Index = () => {
   const defaultSources = [
@@ -151,7 +152,10 @@ const Index = () => {
         {/* Sources are managed above */}
 
         {/* Simple Footer */}
-        <div className="text-center mt-16 pt-8 border-t border-gray-200">
+        <div className="relative text-center mt-16 pt-8 border-t border-gray-200">
+          <span className="absolute left-4 text-xs text-gray-500">
+            {isUsingDatabase ? 'DB' : 'Local'}
+          </span>
           <p className="text-tech-gray">© 2025 MechJobs IL מאת ליאור כהן עבור ליאור כהן - מחבר סטודנטים להנדסת מכונות עם הזדמנויות</p>
         </div>
       </div>
