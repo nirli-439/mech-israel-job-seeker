@@ -88,3 +88,31 @@ settings the list is only kept in your browser's `localStorage`.
 
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
+
+## Docker usage
+
+A `Dockerfile` is provided for building the app into a container. The image accepts several build arguments that are passed as environment variables at runtime. These are useful for backend services that may need database access.
+
+Supported build arguments:
+
+- `DATABASE_URL`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_NAME`
+- `DB_USER`
+- `DB_PASSWORD`
+
+Example build command:
+
+```sh
+docker build \
+  --build-arg DATABASE_URL="postgres://user:pass@host:5432/db" \
+  --build-arg DB_HOST=host \
+  --build-arg DB_PORT=5432 \
+  --build-arg DB_NAME=db \
+  --build-arg DB_USER=user \
+  --build-arg DB_PASSWORD=pass \
+  -t job-seeker .
+```
+
+The resulting container exposes port `8080` running `vite preview`. When backend code is added, it can read the same variables without modifying the Dockerfile.
