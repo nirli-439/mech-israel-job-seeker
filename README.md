@@ -100,3 +100,24 @@ docker compose up --build
 
 The application will be available on [http://localhost:3000](http://localhost:3000).
 
+## Netlify CMS
+
+A basic Netlify CMS setup lives in the `admin/` folder. The Docker image copies
+this folder into the final build so the CMS is served from `/admin`.
+
+To try it locally run the proxy server service:
+
+```sh
+docker compose up cms
+```
+
+This starts the Netlify CLI and serves the CMS at <http://localhost:8081>. You
+can also run `npx netlify-cms-proxy-server` outside Docker if preferred.
+
+## Deploying to Netlify
+
+Netlify reads `netlify.toml` to build the app with `npm run build` and publish
+the `dist/` directory. Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and any
+optional `NETLIFY_AUTH_TOKEN`/`NETLIFY_SITE_ID` variables in your site
+configuration. Once deployed, access the CMS at `/admin` on your Netlify site.
+

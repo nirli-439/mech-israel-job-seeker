@@ -10,3 +10,11 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+  cms:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8081:8081"
+    command: sh -c "npm install -g netlify-cli && netlify cms serve --dir admin --port 8081"
