@@ -83,33 +83,13 @@ settings the list is only kept in your browser's `localStorage`.
    - `name` (text)
    - `url` (text)
    - `updated_at` (timestamp)
-3. Duplicate `.env.example` to `.env` and fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-   In Lovable you can set these under **Project → Settings → Environment**.
+3. Duplicate `.env.example` to `.env` and fill in `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and set `VITE_DATA_SOURCE=db`.
+   In Lovable you can set these under **Project → Settings → Environment**. Use `VITE_DATA_SOURCE=local` to disable Supabase and rely solely on `localStorage`.
 
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
 
-## Running Supabase locally
 
-You can spin up a local Supabase instance alongside the web app using Docker.
-Copy `.env.example` to `.env` and set `SUPABASE_DB_PASSWORD` to any password.
-
-Start the stack:
-
-```sh
-docker compose up
-```
-
-This starts the `web` and `supabase` services. The app is served on
-<http://localhost:3000> and the Supabase container logs print the API URL and
-anonymous key. Copy these values into `VITE_SUPABASE_URL` and
-`VITE_SUPABASE_ANON_KEY` in `.env`.
-
-To stop the stack:
-
-```sh
-docker compose down
-```
 
 
 ## Running with Docker
@@ -141,7 +121,7 @@ can also run `npx netlify-cms-proxy-server` outside Docker if preferred.
 ## Deploying to Netlify
 
 Netlify reads `netlify.toml` to build the app with `npm run build` and publish
-the `dist/` directory. Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and any
+the `dist/` directory. Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_DATA_SOURCE`, and any
 optional `NETLIFY_AUTH_TOKEN`/`NETLIFY_SITE_ID` variables in your site
 configuration. Once deployed, access the CMS at `/admin` on your Netlify site.
 
