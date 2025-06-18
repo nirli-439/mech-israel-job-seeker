@@ -89,16 +89,40 @@ settings the list is only kept in your browser's `localStorage`.
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
 
+## Running Supabase locally
+
+You can spin up a local Supabase instance alongside the web app using Docker.
+Copy `.env.example` to `.env` and set `SUPABASE_DB_PASSWORD` to any password.
+
+Start the stack:
+
+```sh
+docker compose up
+```
+
+This starts the `web` and `supabase` services. The app is served on
+<http://localhost:3000> and the Supabase container logs print the API URL and
+anonymous key. Copy these values into `VITE_SUPABASE_URL` and
+`VITE_SUPABASE_ANON_KEY` in `.env`.
+
+To stop the stack:
+
+```sh
+docker compose down
+```
+
 
 ## Running with Docker
 
-You can build and run the application using Docker. First, copy `.env.example` to `.env` and fill in your Supabase credentials if needed. Then run:
+You can build and run the application using Docker. Copy `.env.example` to `.env` and
+set the Supabase variables described above. Then run:
 
 ```sh
 docker compose up --build
 ```
 
-The application will be available on [http://localhost:3000](http://localhost:3000).
+This launches both the web app and the Supabase container. The application will be
+available on [http://localhost:3000](http://localhost:3000).
 
 ## Netlify CMS
 

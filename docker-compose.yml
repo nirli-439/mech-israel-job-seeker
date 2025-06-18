@@ -10,6 +10,16 @@ services:
       - "3000:80"
     environment:
       - NODE_ENV=production
+  supabase:
+    image: supabase/supabase:latest
+    ports:
+      - "54321:54321"
+      - "54322:54322"
+    environment:
+      SUPABASE_DB_PASSWORD: ${SUPABASE_DB_PASSWORD}
+    volumes:
+      - supabase-data:/var/lib/postgresql/data
+
   cms:
     image: node:20-alpine
     working_dir: /app
@@ -18,3 +28,7 @@ services:
     ports:
       - "8081:8081"
     command: sh -c "npm install -g netlify-cli && netlify cms serve --dir admin --port 8081"
+
+volumes:
+  supabase-data:
+
