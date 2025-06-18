@@ -1,0 +1,63 @@
+version: '3.9'
+
+services:
+  db:
+    image: supabase/postgres:15
+    restart: unless-stopped
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-supabase}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+    networks:
+      - supabase
+
+  auth:
+    image: supabase/gotrue:v2
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-supabase}@db:5432/${POSTGRES_DB:-postgres}
+      GOTRUE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-super-secret-jwt}
+      GOTRUE_SITE_URL: http://localhost:54321
+      API_EXTERNAL_URL: http://localhost:54321/auth/v1
+    networks:
+      - supabase
+
+  rest:
+    image: postgrest/postgrest:v12
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PGRST_DB_URI: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-supabase}@db:5432/${POSTGRES_DB:-postgres}
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${SUPABASE_JWT_SECRET:-super-secret-jwt}
+    ports:
+      - "54321:3000"
+    networks:
+      - supabase
+
+  web:
+    image: node:20
+    working_dir: /app
+    command: npm run dev -- --host 0.0.0.0
+    volumes:
+      - ./:/app
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_SUPABASE_URL: http://localhost:54321
+      VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+    depends_on:
+      - rest
+    networks:
+      - supabase
+
+networks:
+  supabase:
