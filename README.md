@@ -88,3 +88,27 @@ settings the list is only kept in your browser's `localStorage`.
 
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
+
+## Running locally with Docker Compose
+
+This repo now includes a `docker-compose.yml` for running Supabase and the
+development server together.
+
+1. Copy `.env.example` to `.env` – the defaults are suitable for local testing.
+2. Start the stack:
+
+   ```sh
+   docker compose up
+   ```
+
+   The REST API will be available on <http://localhost:54321> and Postgres on
+   `localhost:54322`.
+
+3. The frontend will start on <http://localhost:5173>.
+
+The anonymous API key used by the app is stored in `.env` as
+`VITE_SUPABASE_ANON_KEY`. To print it from a running container you can use:
+
+```sh
+docker compose exec web printenv VITE_SUPABASE_ANON_KEY
+```
