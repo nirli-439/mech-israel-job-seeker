@@ -89,18 +89,20 @@ settings the list is only kept in your browser's `localStorage`.
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
 
-You can switch between database and local modes at any time by editing your `.env` file (or environment variables) and setting `VITE_DATA_SOURCE` accordingly.
+
 
 
 ## Running with Docker
 
-You can build and run the application using Docker. First, copy `.env.example` to `.env` and fill in your Supabase credentials if needed. Then run:
+You can build and run the application using Docker. Copy `.env.example` to `.env` and
+set the Supabase variables described above. Then run:
 
 ```sh
 docker compose up --build
 ```
 
-The application will be available on [http://localhost:3000](http://localhost:3000).
+This launches both the web app and the Supabase container. The application will be
+available on [http://localhost:3000](http://localhost:3000).
 
 ## Netlify CMS
 
