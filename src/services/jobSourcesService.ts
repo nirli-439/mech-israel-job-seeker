@@ -2,7 +2,7 @@
 // This service shows how to implement global source management with a backend
 // Currently commented out since this is a static app without Supabase integration
 
-import { supabase, isUsingDatabase } from './supabaseClient';
+import { supabase } from './supabaseClient';
 
 export interface JobSource {
   id: string;
@@ -27,8 +27,8 @@ export const updateSourcesInCode = (sources: JobSource[]) => {
 
 // Backend helpers using Supabase
 export const saveSourcesGlobally = async (sources: JobSource[]) => {
-  if (!isUsingDatabase || !supabase) {
-    console.warn('Supabase credentials not provided or database disabled. Skipping global save.');
+  if (!supabase) {
+    console.warn('Supabase credentials not provided. Skipping global save.');
     return;
   }
   try {
@@ -50,8 +50,8 @@ export const saveSourcesGlobally = async (sources: JobSource[]) => {
 };
 
 export const loadSourcesGlobally = async (): Promise<JobSource[]> => {
-  if (!isUsingDatabase || !supabase) {
-    console.warn('Supabase credentials not provided or database disabled. Skipping global load.');
+  if (!supabase) {
+    console.warn('Supabase credentials not provided. Skipping global load.');
     return [];
   }
   try {
