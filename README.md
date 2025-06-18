@@ -88,3 +88,15 @@ settings the list is only kept in your browser's `localStorage`.
 
 When these variables are provided, edits to the sources list will be saved to
 Supabase and loaded across devices.
+
+
+## Running with Docker
+
+You can build and run the application using Docker. First, copy `.env.example` to `.env` and fill in your Supabase credentials if needed. Then run:
+
+```sh
+docker compose up --build
+```
+
+The application will be available on [http://localhost:3000](http://localhost:3000).
+
