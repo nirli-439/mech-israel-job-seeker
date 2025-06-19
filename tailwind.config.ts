@@ -120,6 +120,10 @@ export default {
                                                 transform: 'translateX(100%) rotate(45deg)',
                                                 opacity: '0'
                                         }
+                                },
+                                'swing': {
+                                        '0%, 100%': { transform: 'rotate(-5deg)' },
+                                        '50%': { transform: 'rotate(5deg)' }
                                 }
                         },
                         animation: {
@@ -127,7 +131,8 @@ export default {
                                 'accordion-up': 'accordion-up 0.2s ease-out',
                                 'fade-in': 'fade-in 0.6s ease-out',
                                 'slide-up': 'slide-up 0.4s ease-out',
-                                'glare': 'glare 0.75s linear'
+                                'glare': 'glare 0.75s linear',
+                                'swing': 'swing 2s ease-in-out infinite'
                         },
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
