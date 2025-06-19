@@ -88,6 +88,10 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
           </span>
         </span>
 
+        <span className="pointer-events-none absolute inset-0 rounded-[1.25em] overflow-hidden">
+          <span className="absolute left-[-100%] top-0 w-[120%] h-full bg-white/40 opacity-0 rotate-45 group-hover:animate-glare" />
+        </span>
+
         <span className="absolute top-full left-0 right-0 text-center whitespace-nowrap leading-[2] text-sm text-blue-600">
           {item.label}
         </span>
