@@ -1,4 +1,5 @@
 
+
 import React from "react";
 import {
   DragDropContext,
@@ -38,6 +39,9 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
   reorderable,
   onReorder,
 }) => {
+  console.log('GlassIcons rendered with items:', items);
+  console.log('GlassIcons reorderable:', reorderable);
+
   const getBackgroundStyle = (color: string): React.CSSProperties => {
     if (gradientMapping[color]) {
       return { background: gradientMapping[color] };
@@ -54,6 +58,8 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
   };
 
   const renderItem = (item: GlassIconsItem, index: number) => {
+    console.log('Rendering item:', item);
+    
     const commonClasses = `relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
       item.customClass || ""
     }`;
@@ -120,6 +126,8 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
   };
 
   const gridClasses = `grid grid-cols-3 gap-8 mx-auto py-6 overflow-visible ${className || ""}`;
+
+  console.log('Grid classes:', gridClasses);
 
   return reorderable && onReorder ? (
     <DragDropContext onDragEnd={handleDragEnd}>
