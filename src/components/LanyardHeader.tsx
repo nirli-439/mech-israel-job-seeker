@@ -14,7 +14,7 @@ const LanyardHeader: React.FC = () => {
       image="https://picsum.photos/600/400?grayscale"
       contentClassName="!p-4 w-[calc(100%-2em)]"
     >
-      <div className="flex w-full flex-col gap-2 items-end">
+      <div className="flex w-full flex-col gap-2 items-end text-white">
         <span className="font-black text-[2.5rem] leading-tight first-line:text-[6rem] text-right">
           MechJobs IL
         </span>
