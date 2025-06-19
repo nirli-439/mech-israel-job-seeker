@@ -6,6 +6,7 @@ import { ExternalLink, Plus, Edit, Trash2, Lock } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import SourceCodeUpdater from './SourceCodeUpdater';
+import GlassIcons from './reactbits/GlassIcons';
 
 interface JobSource {
   id: string;
@@ -225,20 +226,16 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {sources.map((source) => (
-                <a
-                  key={source.id}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center p-3 bg-white rounded-lg border hover:border-primary hover:shadow-md transition-all duration-200 text-sm font-medium text-tech-gray hover:text-primary group"
-                >
-                  <span className="truncate">{source.name}</span>
-                  <ExternalLink className="w-3 h-3 mr-1 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              ))}
-            </div>
+            <GlassIcons
+              items={sources.map((source, idx) => ({
+                icon: <ExternalLink className="w-4 h-4" />,
+                color: ["blue", "purple", "red", "indigo", "orange", "green"][
+                  idx % 6
+                ],
+                label: source.name,
+                href: source.url,
+              }))}
+            />
           )}
         </CardContent>
       </Card>
