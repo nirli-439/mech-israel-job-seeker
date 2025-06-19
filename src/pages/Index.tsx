@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import DecayCard from '@/components/reactbits/DecayCard';
-import BallpitBackground from '@/components/reactbits/BallpitBackground';
 import RotatingText from '@/components/reactbits/RotatingText';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
@@ -124,7 +123,6 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 overflow-hidden" dir="rtl">
-      <BallpitBackground />
       {/* Centered Main Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
