@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import DecayCard from '@/components/reactbits/DecayCard';
 import RotatingText from '@/components/reactbits/RotatingText';
+import LanyardHeader from '@/components/LanyardHeader';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
@@ -127,21 +127,7 @@ const Index = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12 flex flex-col items-center gap-6">
-          <DecayCard width={600} height={400} image="https://picsum.photos/600/400?grayscale">
-            MechJobs IL
-          </DecayCard>
-
-          <DecayCard
-            width={600}
-            height={250}
-            image="https://picsum.photos/600/250?grayscale"
-          >
-            <>
-              מציאת עבודות לסטודנטים להנדסת מכונות בישראל
-              <br />
-              היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
-            </>
-          </DecayCard>
+          <LanyardHeader />
           <RotatingText
             texts={["שלחת קורות חיים היום ?"]}
             className="text-xl font-semibold text-gray-800"
