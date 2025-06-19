@@ -130,13 +130,17 @@ const Index = () => {
             MechJobs IL
           </DecayCard>
 
-          <h2 className="text-2xl font-semibold text-gray-800">
-            מציאת עבודות לסטודנטים להנדסת מכונות בישראל
-          </h2>
-
-          <p className="text-lg text-tech-gray max-w-2xl mx-auto">
-            היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
-          </p>
+          <DecayCard
+            width={600}
+            height={250}
+            image="https://picsum.photos/600/250?grayscale"
+          >
+            <>
+              מציאת עבודות לסטודנטים להנדסת מכונות בישראל
+              <br />
+              היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
+            </>
+          </DecayCard>
         </div>
 
         {/* Job Sources - Centralized */}
