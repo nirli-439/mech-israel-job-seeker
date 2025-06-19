@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Briefcase } from 'lucide-react';
+import DecayCard from '@/components/reactbits/DecayCard';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
@@ -125,20 +125,15 @@ const Index = () => {
       {/* Centered Main Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-3 space-x-reverse mb-6">
-            <div className="w-12 h-12 bg-israel-gradient rounded-xl flex items-center justify-center">
-              <Briefcase className="w-7 h-7 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold bg-israel-gradient bg-clip-text text-transparent">
-              MechJobs IL
-            </h1>
-          </div>
-          
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        <div className="text-center mb-12 flex flex-col items-center gap-6">
+          <DecayCard width={600} height={400} image="https://picsum.photos/600/400?grayscale">
+            MechJobs IL
+          </DecayCard>
+
+          <h2 className="text-2xl font-semibold text-gray-800">
             מציאת עבודות לסטודנטים להנדסת מכונות בישראל
           </h2>
-          
+
           <p className="text-lg text-tech-gray max-w-2xl mx-auto">
             היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
           </p>
