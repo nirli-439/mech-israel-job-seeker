@@ -238,26 +238,16 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
           ) : (
             <div className="w-full">
               <GlassIcons
-                items={[
-                  ...sources.map((source, idx) => {
-                    const IconComponent = getSourceIcon(source.name);
-                    return {
-                      id: source.id,
-                      icon: <IconComponent className="w-6 h-6 text-white" />,
-                      color: ["blue", "purple", "red", "indigo", "orange", "green"][idx % 6],
-                      label: source.name,
-                      href: source.url,
-                    };
-                  }),
-                  {
-                    id: 'add-source',
-                    icon: <Plus className="w-6 h-6 text-white" />,
-                    color: 'indigo',
-                    label: 'הוסף מקור',
-                    onClick: handleManageClick,
-                    customClass: 'cursor-pointer',
-                  },
-                ]}
+                items={sources.map((source, idx) => {
+                  const IconComponent = getSourceIcon(source.name);
+                  return {
+                    id: source.id,
+                    icon: <IconComponent className="w-6 h-6 text-white" />,
+                    color: ["blue", "purple", "red", "indigo", "orange", "green"][idx % 6],
+                    label: source.name,
+                    href: source.url,
+                  };
+                })}
                 reorderable={isAuthenticated}
                 onReorder={handleReorder}
                 className="max-w-4xl mx-auto"

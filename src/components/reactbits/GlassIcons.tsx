@@ -16,7 +16,6 @@ export interface GlassIconsItem {
   label: string;
   href?: string;
   customClass?: string;
-  onClick?: () => void;
 }
 
 export interface GlassIconsProps {
@@ -109,7 +108,6 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
           rel="noopener noreferrer"
           aria-label={item.label}
           className={commonClasses}
-          onClick={item.onClick}
         >
           {content}
         </a>
@@ -122,7 +120,6 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
         type="button"
         aria-label={item.label}
         className={commonClasses}
-        onClick={item.onClick}
       >
         {content}
       </button>
