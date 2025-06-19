@@ -122,7 +122,7 @@ const Index = () => {
 
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 overflow-hidden" dir="rtl">
+    <div className="relative min-h-screen overflow-hidden" dir="rtl">
       {/* Centered Main Content */}
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
