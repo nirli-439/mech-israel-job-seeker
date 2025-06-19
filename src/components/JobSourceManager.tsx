@@ -6,7 +6,7 @@ import { ExternalLink, Plus, Edit, Trash2, Lock } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import SourceCodeUpdater from './SourceCodeUpdater';
-import GlassIcons from './reactbits/GlassIcons';
+import GlassIcons, { GlassIconsItem } from './reactbits/GlassIcons';
 
 interface JobSource {
   id: string;
@@ -122,6 +122,15 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     setNewSource({ name: '', url: '' });
   };
 
+  const handleReorder = (items: GlassIconsItem[]) => {
+    const newSources = items.map((item) => {
+      return sources.find((s) => s.id === item.id)!;
+    });
+    setEditingSources(newSources);
+    onSourcesChange(newSources);
+    setHasChanges(true);
+  };
+
   return (
     <div>
       <Card className="mb-6">
@@ -228,6 +237,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
           ) : (
             <GlassIcons
               items={sources.map((source, idx) => ({
+                id: source.id,
                 icon: <ExternalLink className="w-4 h-4" />,
                 color: ["blue", "purple", "red", "indigo", "orange", "green"][
                   idx % 6
@@ -235,6 +245,8 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                 label: source.name,
                 href: source.url,
               }))}
+              reorderable
+              onReorder={handleReorder}
             />
           )}
         </CardContent>
