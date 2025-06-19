@@ -1,5 +1,6 @@
 import React from 'react';
 import DecayCard from '@/components/reactbits/DecayCard';
+import DiscordPresence from '@/components/DiscordPresence';
 
 /**
  * Displays the main header using a single DecayCard where the
@@ -13,15 +14,16 @@ const LanyardHeader: React.FC = () => {
       image="https://picsum.photos/600/400?grayscale"
       contentClassName="!p-4 w-[calc(100%-2em)]"
     >
-      <div className="flex w-full justify-between items-end gap-4">
+      <div className="flex w-full flex-col gap-2 items-end">
         <span className="font-black text-[2.5rem] leading-tight first-line:text-[6rem] text-right">
           MechJobs IL
         </span>
-        <span className="font-semibold text-xl leading-tight text-left">
+        <span className="font-semibold text-xl leading-tight text-right">
           מציאת עבודות לסטודנטים להנדסת מכונות בישראל
           <br />
           היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
         </span>
+        <DiscordPresence userId="268798547439255572" />
       </div>
     </DecayCard>
   );
