@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import DecayCard from '@/components/reactbits/DecayCard';
 import BallpitBackground from '@/components/reactbits/BallpitBackground';
+import RotatingText from '@/components/reactbits/RotatingText';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
@@ -143,6 +144,10 @@ const Index = () => {
               היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
             </>
           </DecayCard>
+          <RotatingText
+            texts={["שלחת קורות חיים היום ?"]}
+            className="text-xl font-semibold text-gray-800"
+          />
         </div>
 
         {/* Job Sources - Centralized */}
