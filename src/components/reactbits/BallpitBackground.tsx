@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 
 interface Ball {
@@ -87,7 +88,8 @@ const BallpitBackground: React.FC<BallpitBackgroundProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10 w-full h-full"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none"
+      style={{ zIndex: -10 }}
     />
   );
 };
