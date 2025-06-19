@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, ReactNode } from "react";
 import { gsap } from "gsap";
+import { cn } from "@/lib/utils";
 
 interface DecayCardProps {
   width?: number;
   height?: number;
   image?: string;
   children?: ReactNode;
+  /**
+   * Additional class names for the content wrapper so consumers can
+   * customize the layout of the overlaid content.
+   */
+  contentClassName?: string;
 }
 
 const DecayCard: React.FC<DecayCardProps> = ({
@@ -13,6 +19,7 @@ const DecayCard: React.FC<DecayCardProps> = ({
   height = 400,
   image = "https://picsum.photos/300/400?grayscale",
   children,
+  contentClassName,
 }) => {
   const svgRef = useRef<HTMLDivElement | null>(null);
   const displacementMapRef = useRef<SVGFEDisplacementMapElement | null>(null);
@@ -174,7 +181,12 @@ const DecayCard: React.FC<DecayCardProps> = ({
           />
         </g>
       </svg>
-      <div className="absolute bottom-[1.2em] left-[1em] tracking-[-0.5px] font-black text-[2.5rem] leading-[1.5em] first-line:text-[6rem]">
+      <div
+        className={cn(
+          "absolute bottom-[1.2em] left-[1em] tracking-[-0.5px] font-black text-[2.5rem] leading-[1.5em] first-line:text-[6rem]",
+          contentClassName
+        )}
+      >
         {children}
       </div>
     </div>
