@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   DragDropContext,
@@ -53,19 +54,12 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
   };
 
   const renderItem = (item: GlassIconsItem, index: number) => {
-    const Wrapper = item.href ? 'a' : 'button';
-    const wrapperProps = item.href
-      ? { href: item.href, target: '_blank', rel: 'noopener noreferrer' }
-      : { type: 'button' };
-    const element = (
-      <Wrapper
-        key={item.id}
-        aria-label={item.label}
-        className={`relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
-          item.customClass || ""
-        }`}
-        {...wrapperProps}
-      >
+    const commonClasses = `relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
+      item.customClass || ""
+    }`;
+
+    const content = (
+      <>
         <span
           className="absolute top-0 left-0 w-full h-full rounded-[1.25em] block transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.83,0,0.17,1)] origin-[100%_100%] rotate-[15deg] group-hover:[transform:rotate(25deg)_translate3d(-0.5em,-0.5em,0.5em)]"
           style={{
@@ -95,9 +89,34 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
         <span className="absolute top-full left-0 right-0 text-center whitespace-nowrap leading-[2] text-sm text-blue-600">
           {item.label}
         </span>
-      </Wrapper>
+      </>
     );
-    return element;
+
+    if (item.href) {
+      return (
+        <a
+          key={item.id}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={item.label}
+          className={commonClasses}
+        >
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        aria-label={item.label}
+        className={commonClasses}
+      >
+        {content}
+      </button>
+    );
   };
 
   const gridClasses = `grid grid-cols-3 gap-8 mx-auto py-6 overflow-visible ${className || ""}`;
