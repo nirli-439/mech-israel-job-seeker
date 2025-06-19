@@ -1,31 +1,31 @@
 import React from 'react';
-import DecayCard from '@/components/reactbits/DecayCard';
-import DiscordPresence from '@/components/DiscordPresence';
+import Lanyard from '@/components/reactbits/Lanyard';
+import ShinyButton from '@/components/reactbits/ShinyButton';
+import { Checkbox } from '@/components/ui/checkbox';
 
-/**
- * Displays the main header using a single DecayCard where the
- * title and sub header are split to opposite sides of the card.
- */
 const LanyardHeader: React.FC = () => {
   return (
-    <DecayCard
-      width={600}
-      height={400}
-      image="https://picsum.photos/600/400?grayscale"
-      contentClassName="!p-4 w-[calc(100%-2em)]"
-    >
-      <div className="flex w-full flex-col gap-2 items-end text-white">
-        <span className="font-black text-[2.5rem] leading-tight first-line:text-[6rem] text-right">
-          MechJobs IL
-        </span>
-        <span className="font-semibold text-xl leading-tight text-right">
-          מציאת עבודות לסטודנטים להנדסת מכונות בישראל
-          <br />
-          היעד האחד שלך לגילוי הזדמנויות בחברות הישראליות המובילות
-        </span>
-        <DiscordPresence userId="268798547439255572" />
+    <Lanyard cardClassName="w-[22rem] sm:w-[28rem]">
+      <div className="p-4 flex flex-col items-center gap-4 text-center">
+        <div className="flex flex-col gap-2">
+          <span className="font-black text-[2rem] sm:text-[2.5rem] leading-tight">
+            MechJobs IL
+          </span>
+          <span className="font-semibold text-sm sm:text-lg leading-tight">
+            מציאת עבודות לסטודנטים להנדסת מכונות בישראל
+            <br />
+            היעד האחד שלך לכל הזדמנויות בחברות הישראליות המובילות
+          </span>
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          <ShinyButton>שלחתי היום!</ShinyButton>
+          <Checkbox
+            defaultChecked
+            className="data-[state=checked]:bg-green-600 data-[state=checked]:text-white border-green-600"
+          />
+        </div>
       </div>
-    </DecayCard>
+    </Lanyard>
   );
 };
 
