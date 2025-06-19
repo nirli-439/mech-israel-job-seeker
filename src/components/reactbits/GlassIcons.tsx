@@ -61,7 +61,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
       <Wrapper
         key={item.id}
         aria-label={item.label}
-        className={`relative bg-transparent outline-none w-[3.5em] h-[3.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
+        className={`relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
           item.customClass || ""
         }`}
         {...wrapperProps}
@@ -96,7 +96,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
     return element;
   };
 
-  const gridClasses = `grid grid-cols-3 gap-4 mx-auto py-6 overflow-visible ${className || ""}`;
+  const gridClasses = `grid grid-cols-3 gap-8 mx-auto py-6 overflow-visible ${className || ""}`;
 
   return reorderable && onReorder ? (
     <DragDropContext onDragEnd={handleDragEnd}>
