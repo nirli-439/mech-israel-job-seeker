@@ -80,7 +80,7 @@ const Index = () => {
     {
       id: '16',
       name: 'Ness Technologies',
-      url: 'https://www.ness.com/careers/?search=intern',
+      url: 'https://www.ness-tech.co.il/careers/?word=%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98',
     },
     {
       id: '17',
