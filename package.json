@@ -61,11 +61,6 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "use-lanyard": "^1.7.0",
-    "three": "^0.164.0",
-    "@react-three/fiber": "^8.16.7",
-    "@react-three/drei": "^9.95.1",
-    "@react-three/rapier": "^0.12.1",
-    "meshline": "^3.3.1",
     "uuid": "^11.1.0",
     "vaul": "^0.9.3",
     "zod": "^3.23.8"

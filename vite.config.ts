@@ -14,7 +14,6 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
-  assetsInclude: ['**/*.glb'],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
