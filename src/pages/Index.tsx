@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useVisitCount from '@/hooks/useVisitCount';
 import RotatingText from '@/components/reactbits/RotatingText';
 import LanyardHeader from '@/components/LanyardHeader';
 import JobSourceManager from '@/components/JobSourceManager';
@@ -103,6 +104,7 @@ const Index = () => {
 
 
   const [jobSources, setJobSources] = useState(defaultSources);
+  const visits = useVisitCount();
 
   useEffect(() => {
     loadSourcesGlobally()
@@ -145,6 +147,9 @@ const Index = () => {
         <div className="relative text-center mt-16 pt-8 border-t border-gray-200">
           <span className="absolute left-4 text-xs text-gray-500">
             {isUsingDatabase ? 'DB' : 'Local'}
+          </span>
+          <span className="absolute right-4 text-xs text-gray-500">
+            {visits} visits
           </span>
           <p className="text-tech-gray">© 2025 MechJobs IL מאת ליאור כהן עבור ליאור כהן - מחבר סטודנטים להנדסת מכונות עם הזדמנויות</p>
         </div>
