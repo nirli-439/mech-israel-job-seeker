@@ -92,11 +92,6 @@ const Index = () => {
       name: 'TAT Technologies',
       url: 'https://apply.workable.com/tat-technologies-ltd/',
     },
-    {
-      id: '19',
-      name: 'TAT Technologies',
-      url: 'https://apply.workable.com/tat-technologies-ltd/',
-    },
   ];
 
 
