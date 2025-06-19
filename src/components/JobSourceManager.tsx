@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Plus, Edit, Trash2, Lock } from 'lucide-react';
+import { Plus, Edit, Trash2, Lock } from 'lucide-react';
+import { getSourceIcon } from '@/lib/sourceIcons';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import SourceCodeUpdater from './SourceCodeUpdater';
@@ -238,7 +239,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
             <GlassIcons
               items={sources.map((source, idx) => ({
                 id: source.id,
-                icon: <ExternalLink className="w-4 h-4" />,
+                icon: React.createElement(getSourceIcon(source.name), {
+                  className: 'w-4 h-4',
+                }),
                 color: ["blue", "purple", "red", "indigo", "orange", "green"][
                   idx % 6
                 ],
