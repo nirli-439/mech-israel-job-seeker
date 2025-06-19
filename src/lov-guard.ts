@@ -7,8 +7,16 @@ declare global {
   interface Window {
     lov?: LovGlobal;
   }
+  // Allow accessing `lov` on `globalThis` in non-browser environments
+  /* eslint-disable no-var */
+  var lov: LovGlobal | undefined;
+  /* eslint-enable no-var */
 }
 
-if (typeof window !== 'undefined') {
-  window.lov = window.lov || {};
+const globalTarget = (typeof globalThis !== "undefined" ? globalThis : {}) as {
+  lov?: LovGlobal;
+};
+
+if (!globalTarget.lov) {
+  globalTarget.lov = {};
 }
