@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import RotatingText from '@/components/reactbits/RotatingText';
 import LanyardHeader from '@/components/LanyardHeader';
+import Lanyard from '@/components/reactbits/Lanyard';
 import JobSourceManager from '@/components/JobSourceManager';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
@@ -132,6 +133,7 @@ const Index = () => {
             texts={["שלחת קורות חיים היום ?"]}
             className="text-xl font-semibold text-gray-800"
           />
+          <Lanyard className="mt-4" />
         </div>
 
         {/* Job Sources - Centralized */}
