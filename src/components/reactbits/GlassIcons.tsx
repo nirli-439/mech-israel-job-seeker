@@ -1,5 +1,6 @@
 
 
+
 import React from "react";
 import {
   DragDropContext,
@@ -60,7 +61,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
   const renderItem = (item: GlassIconsItem, index: number) => {
     console.log('Rendering item:', item);
     
-    const commonClasses = `relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group ${
+    const commonClasses = `relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group mb-8 ${
       item.customClass || ""
     }`;
 
@@ -92,7 +93,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
           <span className="absolute left-[-100%] top-0 w-[120%] h-full bg-white/40 opacity-0 rotate-45 group-hover:animate-glare" />
         </span>
 
-        <span className="absolute top-full left-0 right-0 text-center whitespace-nowrap leading-[2] text-sm text-blue-600">
+        <span className="absolute top-full left-1/2 transform -translate-x-1/2 text-center whitespace-nowrap leading-relaxed text-sm text-blue-600 mt-2 px-1">
           {item.label}
         </span>
       </>
@@ -125,7 +126,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
     );
   };
 
-  const gridClasses = `grid grid-cols-3 gap-8 mx-auto py-6 overflow-visible ${className || ""}`;
+  const gridClasses = `grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 sm:gap-8 lg:gap-10 mx-auto py-8 px-4 overflow-visible ${className || ""}`;
 
   console.log('Grid classes:', gridClasses);
 
