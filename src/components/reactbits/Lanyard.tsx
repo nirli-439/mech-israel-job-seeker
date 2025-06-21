@@ -60,7 +60,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
   maxSpeed?: number;
   minSpeed?: number;
 }) {
-  const band = useRef<THREE.Line>(null);
+  const band = useRef<THREE.Mesh>(null);
   const fixed = useRef<any>(null);
   const j1 = useRef<any>(null);
   const j2 = useRef<any>(null);
@@ -145,12 +145,12 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
       
-      // Update rope geometry using native Three.js
+      // Update rope geometry using TubeGeometry for better Three.js compatibility
       if (band.current?.geometry) {
         const points = curve.getPoints(32);
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const tubeGeometry = new THREE.TubeGeometry(curve, 32, 0.02, 8, false);
         band.current.geometry.dispose();
-        band.current.geometry = geometry;
+        band.current.geometry = tubeGeometry;
       }
 
       // Add rotation damping to card
@@ -209,7 +209,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
             <mesh>
               <boxGeometry args={[1.6, 2.25, 0.02]} />
               <meshPhysicalMaterial 
-                {...{ color: "#ffffff" }}
+                color="#ffffff"
                 clearcoat={1}
                 clearcoatRoughness={0.1}
                 roughness={0.1}
@@ -222,11 +222,11 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
               {/* Blue stripes */}
               <mesh position={[0, 1, 0]}>
                 <boxGeometry args={[1.6, 0.2, 0.005]} />
-                <meshStandardMaterial {...{ color: "#0038b8" }} />
+                <meshStandardMaterial color="#0038b8" />
               </mesh>
               <mesh position={[0, -1, 0]}>
                 <boxGeometry args={[1.6, 0.2, 0.005]} />
-                <meshStandardMaterial {...{ color: "#0038b8" }} />
+                <meshStandardMaterial color="#0038b8" />
               </mesh>
               
               {/* Content area */}
@@ -255,7 +255,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
                 ) : (
                   <mesh>
                     <boxGeometry args={[0.3, 0.3, 0.005]} />
-                    <meshStandardMaterial {...{ color: "#0038b8" }} />
+                    <meshStandardMaterial color="#0038b8" />
                   </mesh>
                 )}
               </group>
@@ -265,7 +265,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
             <mesh position={[0, 1.5, 0]}>
               <torusGeometry args={[0.1, 0.02, 8, 16]} />
               <meshStandardMaterial 
-                {...{ color: "#666666" }}
+                color="#666666"
                 metalness={0.8} 
                 roughness={0.2} 
               />
@@ -274,11 +274,11 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
         </RigidBody>
       </group>
 
-      {/* Lanyard rope using native Three.js line */}
-      <line ref={band}>
-        <bufferGeometry />
-        <lineBasicMaterial color="#0038b8" linewidth={3} />
-      </line>
+      {/* Lanyard rope using TubeGeometry */}
+      <mesh ref={band}>
+        <tubeGeometry args={[curve, 32, 0.02, 8, false]} />
+        <meshStandardMaterial color="#0038b8" />
+      </mesh>
     </>
   );
 }
