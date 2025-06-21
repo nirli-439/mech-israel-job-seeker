@@ -147,7 +147,6 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
       
       // Update rope geometry using TubeGeometry for better Three.js compatibility
       if (band.current?.geometry) {
-        const points = curve.getPoints(32);
         const tubeGeometry = new THREE.TubeGeometry(curve, 32, 0.02, 8, false);
         band.current.geometry.dispose();
         band.current.geometry = tubeGeometry;
@@ -274,9 +273,9 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
         </RigidBody>
       </group>
 
-      {/* Lanyard rope using TubeGeometry */}
+      {/* Lanyard rope using a simple cylinder initially */}
       <mesh ref={band}>
-        <tubeGeometry args={[curve, 32, 0.02, 8, false]} />
+        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
         <meshStandardMaterial color="#0038b8" />
       </mesh>
     </>
