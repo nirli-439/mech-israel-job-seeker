@@ -1,14 +1,7 @@
 
 import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, ThreeEvent } from '@react-three/fiber';
-import {
-  Physics,
-  RigidBody,
-  BallCollider,
-  CuboidCollider,
-  type RapierRigidBody,
-} from '@react-three/rapier';
-import { Environment, Lightformer, Html } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +20,6 @@ const Lanyard: React.FC<LanyardProps> = ({
   children, 
   cardClassName,
   position = [0, 0, 8],
-  gravity = [0, -20, 0],
   fov = 25,
   transparent = true
 }) => {
@@ -36,213 +28,142 @@ const Lanyard: React.FC<LanyardProps> = ({
       <Canvas
         camera={{ position, fov }}
         gl={{ alpha: transparent, antialias: true }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
-          gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        }}
       >
         <Suspense fallback={null}>
-          <ambientLight intensity={0.5} />
-          <Physics gravity={gravity} timeStep={1 / 60}>
-            <SimpleLanyardBand cardClassName={cardClassName}>
-              {children}
-            </SimpleLanyardBand>
-          </Physics>
-          <Environment blur={0.75}>
-            <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
-            <Lightformer intensity={10} color="white" position={[-10, 0, 14]} rotation={[0, Math.PI / 2, Math.PI / 3]} scale={[100, 10, 1]} />
-          </Environment>
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[10, 10, 5]} intensity={1} />
+          <StaticLanyard cardClassName={cardClassName}>
+            {children}
+          </StaticLanyard>
         </Suspense>
       </Canvas>
     </div>
   );
 };
 
-function SimpleLanyardBand({ children, cardClassName }: {
+function StaticLanyard({ children, cardClassName }: {
   children?: React.ReactNode;
   cardClassName?: string;
 }) {
-  const card = useRef<RapierRigidBody | null>(null);
-  const rope1 = useRef<RapierRigidBody | null>(null);
-  const rope2 = useRef<RapierRigidBody | null>(null);
-  const rope3 = useRef<RapierRigidBody | null>(null);
-  
-  const [dragged, setDragged] = useState<THREE.Vector3 | false>(false);
-  const [hovered, setHovered] = useState(false);
+  const groupRef = useRef<THREE.Group>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
 
-  // Handle cursor changes
-  useEffect(() => {
-    if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
-      return () => {
-        document.body.style.cursor = 'auto';
-      };
-    }
-  }, [hovered, dragged]);
-
-  // Simple animation loop without complex rope physics
+  // Simple rotation animation when not dragging
   useFrame((state) => {
-    if (dragged && card.current) {
-      // Calculate mouse position in 3D space
-      const vec = new THREE.Vector3();
-      vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
-      const dir = vec.clone().sub(state.camera.position).normalize();
-      vec.add(dir.multiplyScalar(state.camera.position.length()));
-      
-      // Move card to mouse position with offset
-      const dragOffset = dragged as THREE.Vector3;
-      card.current.setNextKinematicTranslation({ 
-        x: vec.x - dragOffset.x, 
-        y: vec.y - dragOffset.y, 
-        z: vec.z - dragOffset.z 
-      });
-    }
-
-    // Simple rope segment positioning
-    if (card.current && rope1.current && rope2.current && rope3.current) {
-      const cardPos = card.current.translation();
-      
-      // Position rope segments to create a simple chain effect
-      rope3.current.setNextKinematicTranslation({
-        x: cardPos.x * 0.8,
-        y: cardPos.y + 1,
-        z: cardPos.z * 0.8
-      });
-
-      rope2.current.setNextKinematicTranslation({
-        x: cardPos.x * 0.6,
-        y: cardPos.y + 2,
-        z: cardPos.z * 0.6
-      });
-
-      rope1.current.setNextKinematicTranslation({
-        x: cardPos.x * 0.4,
-        y: cardPos.y + 3,
-        z: cardPos.z * 0.4
-      });
+    if (groupRef.current && !isDragging) {
+      groupRef.current.rotation.y = rotation.y + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+      groupRef.current.rotation.x = rotation.x + Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
     }
   });
 
+  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
+    setIsDragging(true);
+    setDragStart({ x: event.clientX, y: event.clientY });
+    (event.target as Element).setPointerCapture(event.pointerId);
+  };
+
+  const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
+    if (isDragging && groupRef.current) {
+      const deltaX = (event.clientX - dragStart.x) * 0.01;
+      const deltaY = (event.clientY - dragStart.y) * 0.01;
+      
+      const newRotation = {
+        x: rotation.x + deltaY,
+        y: rotation.y + deltaX
+      };
+      
+      setRotation(newRotation);
+      groupRef.current.rotation.set(newRotation.x, newRotation.y, 0);
+    }
+  };
+
+  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
+    setIsDragging(false);
+    (event.target as Element).releasePointerCapture(event.pointerId);
+  };
+
   return (
-    <>
-      {/* Simplified rope segments */}
-      <RigidBody ref={rope1} type="kinematicPosition" position={[0, 3.5, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.02, 0.02, 0.8, 8]} />
-          <meshStandardMaterial color="#0038b8" />
-        </mesh>
-      </RigidBody>
-
-      <RigidBody ref={rope2} type="kinematicPosition" position={[0, 2.5, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.02, 0.02, 0.8, 8]} />
-          <meshStandardMaterial color="#0038b8" />
-        </mesh>
-      </RigidBody>
-
-      <RigidBody ref={rope3} type="kinematicPosition" position={[0, 1.5, 0]}>
-        <mesh>
-          <cylinderGeometry args={[0.02, 0.02, 0.8, 8]} />
-          <meshStandardMaterial color="#0038b8" />
-        </mesh>
-      </RigidBody>
+    <group ref={groupRef} position={[0, 0, 0]}>
+      {/* Static rope segments */}
+      <mesh position={[0, 3, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
+        <meshStandardMaterial color="#0038b8" />
+      </mesh>
+      
+      <mesh position={[0, 2, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
+        <meshStandardMaterial color="#0038b8" />
+      </mesh>
+      
+      <mesh position={[0, 1, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
+        <meshStandardMaterial color="#0038b8" />
+      </mesh>
       
       {/* Interactive card */}
-      <RigidBody 
-        position={[0, 0, 0]} 
-        ref={card} 
-        type={dragged ? 'kinematicPosition' : 'dynamic'}
-        canSleep={true}
-        colliders={false}
-        angularDamping={2}
-        linearDamping={2}
+      <group
+        position={[0, -0.5, 0]}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
       >
-        <CuboidCollider args={[0.8, 1.125, 0.01]} />
-        <group
-          scale={1.5}
-          position={[0, -1.2, -0.05]}
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
-          onPointerUp={(e: ThreeEvent<PointerEvent>) => {
-            (e.target as Element).releasePointerCapture(e.pointerId);
-            setDragged(false);
-          }}
-          onPointerDown={(e: ThreeEvent<PointerEvent>) => {
-            (e.target as Element).setPointerCapture(e.pointerId);
-            const cardPos = new THREE.Vector3().copy(card.current!.translation());
-            setDragged(e.point.clone().sub(cardPos));
-          }}
-        >
-          {/* Card mesh */}
-          <mesh>
-            <boxGeometry args={[1.6, 2.25, 0.02]} />
-            <meshPhysicalMaterial 
-              color="#ffffff"
-              clearcoat={1}
-              clearcoatRoughness={0.1}
-              roughness={0.1}
-              metalness={0.1}
-            />
-          </mesh>
-          
-          {/* Card content */}
-          <group position={[0, 0, 0.02]}>
-            {/* Blue stripes */}
-            <mesh position={[0, 1, 0]}>
-              <boxGeometry args={[1.6, 0.2, 0.005]} />
-              <meshStandardMaterial color="#0038b8" />
-            </mesh>
-            <mesh position={[0, -1, 0]}>
-              <boxGeometry args={[1.6, 0.2, 0.005]} />
-              <meshStandardMaterial color="#0038b8" />
-            </mesh>
-            
-            {/* Content area */}
-            <group position={[0, 0, 0.01]}>
-              {children ? (
-                <Html
-                  transform
-                  distanceFactor={10}
-                  position={[0, 0, 0]}
-                  style={{
-                    width: '160px',
-                    height: '200px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    color: '#0038b8',
-                    textAlign: 'center',
-                    pointerEvents: 'none'
-                  }}
-                >
-                  <div className={cn('p-2', cardClassName)}>
-                    {children}
-                  </div>
-                </Html>
-              ) : (
-                <mesh>
-                  <boxGeometry args={[0.3, 0.3, 0.005]} />
-                  <meshStandardMaterial color="#0038b8" />
-                </mesh>
-              )}
-            </group>
-          </group>
-          
-          {/* Clip/ring at top */}
-          <mesh position={[0, 1.5, 0]}>
-            <torusGeometry args={[0.1, 0.02, 8, 16]} />
-            <meshStandardMaterial 
-              color="#666666"
-              metalness={0.8} 
-              roughness={0.2} 
-            />
-          </mesh>
-        </group>
-      </RigidBody>
-    </>
+        {/* Card base */}
+        <mesh>
+          <boxGeometry args={[1.6, 2.25, 0.02]} />
+          <meshStandardMaterial 
+            color="#ffffff"
+            roughness={0.1}
+            metalness={0.1}
+          />
+        </mesh>
+        
+        {/* Blue stripes */}
+        <mesh position={[0, 1, 0.02]}>
+          <boxGeometry args={[1.6, 0.2, 0.005]} />
+          <meshStandardMaterial color="#0038b8" />
+        </mesh>
+        <mesh position={[0, -1, 0.02]}>
+          <boxGeometry args={[1.6, 0.2, 0.005]} />
+          <meshStandardMaterial color="#0038b8" />
+        </mesh>
+        
+        {/* Content area */}
+        {children && (
+          <Html
+            transform
+            distanceFactor={10}
+            position={[0, 0, 0.03]}
+            style={{
+              width: '160px',
+              height: '200px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '12px',
+              color: '#0038b8',
+              textAlign: 'center',
+              pointerEvents: 'none'
+            }}
+          >
+            <div className={cn('p-2', cardClassName)}>
+              {children}
+            </div>
+          </Html>
+        )}
+        
+        {/* Ring at top */}
+        <mesh position={[0, 1.3, 0]}>
+          <torusGeometry args={[0.1, 0.02, 8, 16]} />
+          <meshStandardMaterial 
+            color="#666666"
+            metalness={0.8} 
+            roughness={0.2} 
+          />
+        </mesh>
+      </group>
+    </group>
   );
 }
 
