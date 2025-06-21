@@ -1,8 +1,7 @@
-
 import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { Physics, RigidBody, BallCollider, CuboidCollider, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
-import { Environment, Lightformer, useTexture } from '@react-three/drei';
+import { Environment, Lightformer, Html } from '@react-three/drei';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
@@ -78,7 +77,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
   const segmentProps = { 
     type: 'dynamic' as const, 
     canSleep: true, 
-    colliders: false, 
+    colliders: false as const, 
     angularDamping: 2, 
     linearDamping: 2 
   };
@@ -209,7 +208,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
             <mesh>
               <boxGeometry args={[1.6, 2.25, 0.02]} />
               <meshPhysicalMaterial 
-                color="white"
+                color="#ffffff"
                 clearcoat={1}
                 clearcoatRoughness={0.1}
                 roughness={0.1}
