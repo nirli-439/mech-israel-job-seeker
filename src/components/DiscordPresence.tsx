@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useLanyardWS } from 'use-lanyard';
 
@@ -6,7 +7,7 @@ interface DiscordPresenceProps {
 }
 
 const DiscordPresence: React.FC<DiscordPresenceProps> = ({ userId }) => {
-  const data = useLanyardWS(userId);
+  const data = useLanyardWS(userId as `${bigint}`);
 
   if (!data) return null;
 

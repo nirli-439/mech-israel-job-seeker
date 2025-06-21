@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { Physics, RigidBody, BallCollider, CuboidCollider, useRopeJoint, useSphericalJoint } from '@react-three/rapier';
@@ -208,7 +209,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
             <mesh>
               <boxGeometry args={[1.6, 2.25, 0.02]} />
               <meshPhysicalMaterial 
-                color="#ffffff"
+                {...{ color: "#ffffff" }}
                 clearcoat={1}
                 clearcoatRoughness={0.1}
                 roughness={0.1}
@@ -221,11 +222,11 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
               {/* Blue stripes */}
               <mesh position={[0, 1, 0]}>
                 <boxGeometry args={[1.6, 0.2, 0.005]} />
-                <meshStandardMaterial color="#0038b8" />
+                <meshStandardMaterial {...{ color: "#0038b8" }} />
               </mesh>
               <mesh position={[0, -1, 0]}>
                 <boxGeometry args={[1.6, 0.2, 0.005]} />
-                <meshStandardMaterial color="#0038b8" />
+                <meshStandardMaterial {...{ color: "#0038b8" }} />
               </mesh>
               
               {/* Content area */}
@@ -254,7 +255,7 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
                 ) : (
                   <mesh>
                     <boxGeometry args={[0.3, 0.3, 0.005]} />
-                    <meshStandardMaterial color="#0038b8" />
+                    <meshStandardMaterial {...{ color: "#0038b8" }} />
                   </mesh>
                 )}
               </group>
@@ -263,7 +264,11 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
             {/* Clip/ring at top */}
             <mesh position={[0, 1.5, 0]}>
               <torusGeometry args={[0.1, 0.02, 8, 16]} />
-              <meshStandardMaterial color="#666666" metalness={0.8} roughness={0.2} />
+              <meshStandardMaterial 
+                {...{ color: "#666666" }}
+                metalness={0.8} 
+                roughness={0.2} 
+              />
             </mesh>
           </group>
         </RigidBody>
@@ -273,24 +278,12 @@ function LanyardBand({ children, cardClassName, maxSpeed = 50, minSpeed = 10 }: 
       <mesh ref={band}>
         <meshLineGeometry />
         <meshLineMaterial
-          color="#0038b8"
+          {...{ color: "#0038b8" }}
           lineWidth={0.02}
           resolution={[1000, 1000]}
         />
       </mesh>
     </>
-  );
-}
-
-// HTML component for rendering React content in 3D
-function Html({ children, transform, distanceFactor, position, style, ...props }: any) {
-  return (
-    <group position={position} {...props}>
-      <mesh>
-        <planeGeometry args={[1.6, 2]} />
-        <meshBasicMaterial transparent opacity={0} />
-      </mesh>
-    </group>
   );
 }
 
