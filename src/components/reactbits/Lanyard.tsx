@@ -1,7 +1,13 @@
 
 import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Physics, RigidBody, BallCollider, CuboidCollider } from '@react-three/rapier';
+import { Canvas, useFrame, ThreeEvent } from '@react-three/fiber';
+import {
+  Physics,
+  RigidBody,
+  BallCollider,
+  CuboidCollider,
+  type RapierRigidBody,
+} from '@react-three/rapier';
 import { Environment, Lightformer, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
@@ -54,14 +60,14 @@ const Lanyard: React.FC<LanyardProps> = ({
   );
 };
 
-function SimpleLanyardBand({ children, cardClassName }: { 
-  children?: React.ReactNode; 
+function SimpleLanyardBand({ children, cardClassName }: {
+  children?: React.ReactNode;
   cardClassName?: string;
 }) {
-  const card = useRef<any>(null);
-  const rope1 = useRef<any>(null);
-  const rope2 = useRef<any>(null);
-  const rope3 = useRef<any>(null);
+  const card = useRef<RapierRigidBody | null>(null);
+  const rope1 = useRef<RapierRigidBody | null>(null);
+  const rope2 = useRef<RapierRigidBody | null>(null);
+  const rope3 = useRef<RapierRigidBody | null>(null);
   
   const [dragged, setDragged] = useState<THREE.Vector3 | false>(false);
   const [hovered, setHovered] = useState(false);
@@ -159,14 +165,14 @@ function SimpleLanyardBand({ children, cardClassName }: {
           position={[0, -1.2, -0.05]}
           onPointerOver={() => setHovered(true)}
           onPointerOut={() => setHovered(false)}
-          onPointerUp={(e) => {
-            (e.target as any).releasePointerCapture(e.pointerId);
+          onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+            (e.target as Element).releasePointerCapture(e.pointerId);
             setDragged(false);
           }}
-          onPointerDown={(e) => {
-            (e.target as any).setPointerCapture(e.pointerId);
-            const cardPos = new THREE.Vector3().copy(card.current.translation());
-            setDragged(new THREE.Vector3().copy((e as any).point).sub(cardPos));
+          onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+            (e.target as Element).setPointerCapture(e.pointerId);
+            const cardPos = new THREE.Vector3().copy(card.current!.translation());
+            setDragged(e.point.clone().sub(cardPos));
           }}
         >
           {/* Card mesh */}
