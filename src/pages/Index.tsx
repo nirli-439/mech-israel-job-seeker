@@ -58,11 +58,6 @@ const Index = () => {
       url: 'https://career.rafael.co.il/students/',
     },
     {
-      id: '12',
-      name: 'HP Careers',
-      url: 'https://jobs.hp.com/us/students-graduates/',
-    },
-    {
       id: '13',
       name: 'Applied Materials',
       url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student',
