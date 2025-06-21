@@ -1,170 +1,204 @@
 
-import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { Canvas, useFrame, ThreeEvent } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
-import * as THREE from 'three';
+import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface LanyardProps {
   className?: string;
   children?: React.ReactNode;
   cardClassName?: string;
-  position?: [number, number, number];
-  gravity?: [number, number, number];
-  fov?: number;
-  transparent?: boolean;
 }
 
-const Lanyard: React.FC<LanyardProps> = ({ 
-  className, 
-  children, 
-  cardClassName,
-  position = [0, 0, 8],
-  fov = 25,
-  transparent = true
-}) => {
+const Lanyard: React.FC<LanyardProps> = ({ className, children, cardClassName }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const lanyardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isPressed, setIsPressed] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!cardRef.current) return;
+
+      const rect = cardRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const mouseX = e.clientX - centerX;
+      const mouseY = e.clientY - centerY;
+      
+      setMousePosition({ x: mouseX, y: mouseY });
+      
+      // Create 3D rotation based on mouse position
+      const rotateX = (mouseY / rect.height) * -30;
+      const rotateY = (mouseX / rect.width) * 30;
+      
+      setRotation({ x: rotateX, y: rotateY });
+    };
+
+    const handleMouseLeave = () => {
+      setRotation({ x: 0, y: 0 });
+      setIsHovered(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  const cardStyle = {
+    transform: isHovered 
+      ? `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) translateZ(20px) scale(1.05)`
+      : `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)`,
+    transition: isPressed 
+      ? 'transform 0.1s ease-out' 
+      : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
+  const lanyardStyle = {
+    transform: isHovered 
+      ? `translateX(${mousePosition.x * 0.02}px) translateY(${mousePosition.y * 0.01}px) rotate(${mousePosition.x * 0.02}deg)`
+      : 'translateX(0px) translateY(0px) rotate(0deg)',
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  };
+
   return (
-    <div className={cn('relative w-full h-96 cursor-grab active:cursor-grabbing', className)}>
-      <Canvas
-        camera={{ position, fov }}
-        gl={{ alpha: transparent, antialias: true }}
+    <div 
+      ref={lanyardRef}
+      className={cn('flex flex-col items-center origin-top cursor-pointer select-none', className)}
+      style={lanyardStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
+    >
+      {/* Lanyard strings with physics */}
+      <div className="flex gap-1 h-16 relative">
+        <div 
+          className={cn(
+            "w-1 bg-israel-blue rounded origin-bottom transition-all duration-500",
+            isHovered ? "animate-pulse bg-gradient-to-b from-israel-blue to-blue-600" : ""
+          )} 
+          style={{
+            transform: isHovered ? `scaleY(1.1) rotate(${mousePosition.x * 0.01}deg)` : 'scaleY(1) rotate(0deg)',
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
+        <div 
+          className={cn(
+            "w-1 bg-israel-blue rounded origin-bottom transition-all duration-500",
+            isHovered ? "animate-pulse bg-gradient-to-b from-israel-blue to-blue-600" : ""
+          )}
+          style={{
+            transform: isHovered ? `scaleY(1.1) rotate(${mousePosition.x * -0.01}deg)` : 'scaleY(1) rotate(0deg)',
+            transition: 'transform 0.3s ease-out',
+          }}
+        />
+        
+        {/* Floating particles effect */}
+        {isHovered && (
+          <>
+            <div className="absolute -top-2 -left-2 w-1 h-1 bg-israel-blue rounded-full animate-ping opacity-75" />
+            <div className="absolute -top-1 -right-2 w-1 h-1 bg-blue-400 rounded-full animate-ping opacity-50" style={{ animationDelay: '0.2s' }} />
+            <div className="absolute top-8 -left-1 w-0.5 h-0.5 bg-blue-300 rounded-full animate-ping opacity-60" style={{ animationDelay: '0.4s' }} />
+          </>
+        )}
+      </div>
+
+      {/* Card with 3D physics */}
+      <div
+        ref={cardRef}
+        className={cn(
+          'bg-white border-2 border-israel-blue rounded shadow-lg overflow-hidden flex flex-col w-80 relative',
+          'before:absolute before:inset-0 before:bg-gradient-to-br before:from-transparent before:via-transparent before:to-blue-50 before:opacity-0 before:transition-opacity before:duration-300',
+          isHovered ? 'before:opacity-100 shadow-2xl shadow-blue-200/50' : 'shadow-lg',
+          isPressed ? 'shadow-md' : '',
+          cardClassName,
+        )}
+        style={cardStyle}
       >
-        <Suspense fallback={null}>
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <StaticLanyard cardClassName={cardClassName}>
-            {children}
-          </StaticLanyard>
-        </Suspense>
-      </Canvas>
+        {/* Top stripe with shimmer */}
+        <div 
+          className={cn(
+            "h-2 w-full bg-israel-blue relative overflow-hidden",
+            isHovered ? "bg-gradient-to-r from-israel-blue via-blue-400 to-israel-blue" : ""
+          )}
+        >
+          {isHovered && (
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"
+              style={{ 
+                animation: 'shimmer 2s ease-in-out infinite',
+                backgroundSize: '200% 100%',
+              }}
+            />
+          )}
+        </div>
+        
+        {/* Content area with bounce effect */}
+        <div 
+          className={cn(
+            "flex-1 flex items-center justify-center p-2 transition-all duration-300",
+            isHovered ? "transform scale-105" : "",
+            isPressed ? "transform scale-95" : ""
+          )}
+        >
+          {children ?? (
+            <div className="text-center">
+              <span 
+                className={cn(
+                  "text-2xl text-israel-blue transition-all duration-300",
+                  isHovered ? "text-3xl animate-bounce" : ""
+                )}
+              >
+                ✡
+              </span>
+              {isHovered && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-israel-blue/20 text-6xl animate-ping">✡</div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        
+        {/* Bottom stripe with shimmer */}
+        <div 
+          className={cn(
+            "h-2 w-full bg-israel-blue relative overflow-hidden",
+            isHovered ? "bg-gradient-to-r from-israel-blue via-blue-400 to-israel-blue" : ""
+          )}
+        >
+          {isHovered && (
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              style={{ 
+                animation: 'shimmer 2s ease-in-out infinite 0.5s',
+                backgroundSize: '200% 100%',
+              }}
+            />
+          )}
+        </div>
+
+        {/* Glowing edge effect */}
+        {isHovered && (
+          <div className="absolute inset-0 border-2 border-blue-300/50 rounded animate-pulse pointer-events-none" />
+        )}
+      </div>
+
+      {/* Add custom keyframes for shimmer */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
     </div>
   );
 };
-
-function StaticLanyard({ children, cardClassName }: {
-  children?: React.ReactNode;
-  cardClassName?: string;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-
-  // Simple rotation animation when not dragging
-  useFrame((state) => {
-    if (groupRef.current && !isDragging) {
-      groupRef.current.rotation.y = rotation.y + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
-      groupRef.current.rotation.x = rotation.x + Math.sin(state.clock.elapsedTime * 0.3) * 0.05;
-    }
-  });
-
-  const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
-    setIsDragging(true);
-    setDragStart({ x: event.clientX, y: event.clientY });
-    (event.target as Element).setPointerCapture(event.pointerId);
-  };
-
-  const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
-    if (isDragging && groupRef.current) {
-      const deltaX = (event.clientX - dragStart.x) * 0.01;
-      const deltaY = (event.clientY - dragStart.y) * 0.01;
-      
-      const newRotation = {
-        x: rotation.x + deltaY,
-        y: rotation.y + deltaX
-      };
-      
-      setRotation(newRotation);
-      groupRef.current.rotation.set(newRotation.x, newRotation.y, 0);
-    }
-  };
-
-  const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
-    setIsDragging(false);
-    (event.target as Element).releasePointerCapture(event.pointerId);
-  };
-
-  return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Static rope segments */}
-      <mesh position={[0, 3, 0]}>
-        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
-        <meshStandardMaterial color="#0038b8" />
-      </mesh>
-      
-      <mesh position={[0, 2, 0]}>
-        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
-        <meshStandardMaterial color="#0038b8" />
-      </mesh>
-      
-      <mesh position={[0, 1, 0]}>
-        <cylinderGeometry args={[0.02, 0.02, 1, 8]} />
-        <meshStandardMaterial color="#0038b8" />
-      </mesh>
-      
-      {/* Interactive card */}
-      <group
-        position={[0, -0.5, 0]}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      >
-        {/* Card base */}
-        <mesh>
-          <boxGeometry args={[1.6, 2.25, 0.02]} />
-          <meshStandardMaterial 
-            color="#ffffff"
-            roughness={0.1}
-            metalness={0.1}
-          />
-        </mesh>
-        
-        {/* Blue stripes */}
-        <mesh position={[0, 1, 0.02]}>
-          <boxGeometry args={[1.6, 0.2, 0.005]} />
-          <meshStandardMaterial color="#0038b8" />
-        </mesh>
-        <mesh position={[0, -1, 0.02]}>
-          <boxGeometry args={[1.6, 0.2, 0.005]} />
-          <meshStandardMaterial color="#0038b8" />
-        </mesh>
-        
-        {/* Content area */}
-        {children && (
-          <Html
-            transform
-            distanceFactor={10}
-            position={[0, 0, 0.03]}
-            style={{
-              width: '160px',
-              height: '200px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '12px',
-              color: '#0038b8',
-              textAlign: 'center',
-              pointerEvents: 'none'
-            }}
-          >
-            <div className={cn('p-2', cardClassName)}>
-              {children}
-            </div>
-          </Html>
-        )}
-        
-        {/* Ring at top */}
-        <mesh position={[0, 1.3, 0]}>
-          <torusGeometry args={[0.1, 0.02, 8, 16]} />
-          <meshStandardMaterial 
-            color="#666666"
-            metalness={0.8} 
-            roughness={0.2} 
-          />
-        </mesh>
-      </group>
-    </group>
-  );
-}
 
 export default Lanyard;
