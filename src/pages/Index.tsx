@@ -25,12 +25,12 @@ const Index = () => {
     {
       id: '4',
       name: 'JobMaster',
-      url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=',
+      url: 'https://www.jobmaster.co.il/jobs/?lang=&q=%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98+%D7%94%D7%A0%D7%93%D7%A1%D7%AA+%D7%9E%D7%9B%D7%95%D7%A0%D7%95%D7%AA&l=',
     },
     {
       id: '5',
       name: 'Drushim',
-      url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט',
+      url: 'https://www.drushim.co.il/jobs/search/%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98%2F%D7%99%D7%AA%20%D7%94%D7%A0%D7%93%D7%A1%D7%AA%20%D7%9E%D7%9B%D7%95%D7%A0%D7%95%D7%AA/?ssaen=1',
     },
     {
       id: '7',
