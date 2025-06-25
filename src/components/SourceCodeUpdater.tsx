@@ -9,6 +9,7 @@ interface JobSource {
   id: string;
   name: string;
   url: string;
+  lastUpdated?: string;
 }
 
 interface SourceCodeUpdaterProps {
@@ -20,7 +21,7 @@ const SourceCodeUpdater: React.FC<SourceCodeUpdaterProps> = ({ sources }) => {
 
   const generateSourceCode = () => {
     const sourcesCode = sources.map((source, index) =>
-      `    {\n      id: '${source.id}',\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}'${index === sources.length - 1 ? '' : ','}\n    }`
+      `    {\n      id: '${source.id}',\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}',\n      lastUpdated: '${source.lastUpdated || new Date().toISOString()}'${index === sources.length - 1 ? '' : ','}\n    }`
     ).join('');
     
     return `const defaultSources = [\n${sourcesCode}\n  ];`;

@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Edit, Trash2, Lock } from 'lucide-react';
+import { Plus, Edit, Trash2, Lock, Clock } from 'lucide-react';
 import { getSourceIcon } from '@/lib/sourceIcons';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
@@ -13,6 +14,7 @@ interface JobSource {
   id: string;
   name: string;
   url: string;
+  lastUpdated?: string;
 }
 
 interface JobSourceManagerProps {
@@ -35,6 +37,15 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     setEditingSources(sources);
   }, [sources]);
 
+  const formatLastUpdated = (timestamp?: string) => {
+    if (!timestamp) return 'לא עודכן';
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('he-IL', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    });
+  };
 
   const handlePasswordSubmit = () => {
     if (password === 'afeka') {
@@ -72,7 +83,8 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
       const newSourceWithId = {
         id: Date.now().toString(),
         name: newSource.name,
-        url: newSource.url
+        url: newSource.url,
+        lastUpdated: new Date().toISOString()
       };
       const updatedSources = [...editingSources, newSourceWithId];
       
@@ -101,7 +113,11 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   const handleUpdateSource = (id: string, field: 'name' | 'url', value: string) => {
     const updatedSources = editingSources.map(source => 
-      source.id === id ? { ...source, [field]: value } : source
+      source.id === id ? { 
+        ...source, 
+        [field]: value,
+        lastUpdated: new Date().toISOString()
+      } : source
     );
     
     setEditingSources(updatedSources);
@@ -206,7 +222,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
               {/* Edit existing sources */}
               <div className="space-y-2">
                 {editingSources.map((source) => (
-                  <div key={source.id} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
+                  <div key={source.id} className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center">
                     <Input
                       value={source.name}
                       onChange={(e) => handleUpdateSource(source.id, 'name', e.target.value)}
@@ -217,6 +233,10 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                       onChange={(e) => handleUpdateSource(source.id, 'url', e.target.value)}
                       className="text-left"
                     />
+                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                      <Clock className="w-3 h-3" />
+                      {formatLastUpdated(source.lastUpdated)}
+                    </div>
                     <Button
                       variant="destructive"
                       size="sm"
@@ -247,6 +267,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                       color: ["blue", "purple", "red", "indigo", "orange", "green"][idx % 6],
                       label: source.name,
                       href: source.url,
+                      subtitle: `עודכן: ${formatLastUpdated(source.lastUpdated)}`,
                     };
                   }),
                   {

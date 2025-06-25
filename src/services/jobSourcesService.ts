@@ -8,12 +8,13 @@ export interface JobSource {
   id: string;
   name: string;
   url: string;
+  lastUpdated?: string; // ISO timestamp string
 }
 
 // For static apps - Development workflow
 export const updateSourcesInCode = (sources: JobSource[]) => {
   const sourcesCode = sources.map((source, index) => 
-    `    {\n      id: ${source.id},\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}'${index === sources.length - 1 ? '' : ','}\n    }`
+    `    {\n      id: ${source.id},\n      name: '${source.name.replace(/'/g, "\\'")}',\n      url: '${source.url.replace(/'/g, "\\'")}',\n      lastUpdated: '${source.lastUpdated || new Date().toISOString()}'${index === sources.length - 1 ? '' : ','}\n    }`
   ).join('');
   
   const fullCode = `const defaultSources = [\n${sourcesCode}\n  ];`;
@@ -39,6 +40,7 @@ export const saveSourcesGlobally = async (sources: JobSource[]) => {
           id: source.id,
           name: source.name,
           url: source.url,
+          last_updated: source.lastUpdated || new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }))
       );
@@ -60,7 +62,12 @@ export const loadSourcesGlobally = async (): Promise<JobSource[]> => {
       .select('*')
       .order('id');
     if (error) throw error;
-    return (data as JobSource[]) || [];
+    return (data?.map(item => ({
+      id: item.id,
+      name: item.name,
+      url: item.url,
+      lastUpdated: item.last_updated
+    })) as JobSource[]) || [];
   } catch (error) {
     console.error('Error loading sources globally:', error);
     throw error;
