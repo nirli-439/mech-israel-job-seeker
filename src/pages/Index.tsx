@@ -7,7 +7,7 @@ import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/serv
 import { isUsingDatabase } from '@/services/supabaseClient';
 
 const Index = () => {
-  const defaultSources = [
+  const defaultSources: JobSource[] = [
     {
       id: '1',
       name: 'LinkedIn',
@@ -63,12 +63,6 @@ const Index = () => {
       lastUpdated: '2025-01-01T00:00:00.000Z'
     },
     {
-      id: '11',
-      name: 'רפאל (Rafael)',
-      url: 'https://career.rafael.co.il/students/',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
       id: '13',
       name: 'Applied Materials',
       url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student',
@@ -112,8 +106,7 @@ const Index = () => {
     saveSourcesGlobally(sources).catch(console.error);
   };
 
-
-  const [jobSources, setJobSources] = useState(defaultSources);
+  const [jobSources, setJobSources] = useState<JobSource[]>(defaultSources);
   const visits = useVisitCount();
 
   useEffect(() => {
@@ -132,7 +125,6 @@ const Index = () => {
       });
   }, []);
 
-
   return (
     <div className="relative min-h-screen overflow-hidden" dir="rtl">
       {/* Centered Main Content */}
@@ -146,8 +138,6 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
         </div>
-
-        {/* Sources are managed above */}
 
         {/* Simple Footer */}
         <div className="relative text-center mt-16 pt-8 border-t border-gray-200">
