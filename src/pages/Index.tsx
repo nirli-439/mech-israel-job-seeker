@@ -20,7 +20,7 @@ const Index = () => {
     {
       id: '3',
       name: 'AllJobs',
-      url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=1047&type=&source=&duration=0&exc=&region=',
+      url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=&type=&freetxt=%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98%20%D7%9C%D7%94%D7%A0%D7%93%D7%A1%D7%AA%20%D7%9E%D7%9B%D7%95%D7%A0%D7%95%D7%AA&city=&region=',
     },
     {
       id: '4',
