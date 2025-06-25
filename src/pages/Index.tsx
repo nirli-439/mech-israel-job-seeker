@@ -1,128 +1,18 @@
-
 import { useState, useEffect } from 'react';
 import useVisitCount from '@/hooks/useVisitCount';
 import LanyardHeader from '@/components/LanyardHeader';
 import JobSourceManager from '@/components/JobSourceManager';
-import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
+import { getJobSources, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
 
 const Index = () => {
-  const defaultSources: JobSource[] = [
-    {
-      id: '1',
-      name: 'LinkedIn',
-      url: 'https://www.linkedin.com/jobs/search/?currentJobId=4235127935&f_JT=I&geoId=101620260&keywords=mechanical%20engineer%20student&origin=JOB_SEARCH_PAGE_LOCATION_AUTOCOMPLETE&originalSubdomain=il&refresh=true',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '2',
-      name: 'Glassdoor',
-      url: 'https://www.glassdoor.com/Job/israel-mechanical-engineering-student-jobs-SRCH_IL.0,6_IN119_KO7,37.htm',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '3',
-      name: 'AllJobs',
-      url: 'https://www.alljobs.co.il/SearchResultsGuest.aspx?page=1&position=&type=&freetxt=%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98%20%D7%9C%D7%94%D7%A0%D7%93%D7%A1%D7%AA%20%D7%9E%D7%9B%D7%95%D7%A0%D7%95%D7%AA&city=&region=',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '4',
-      name: 'JobMaster',
-      url: 'https://www.jobmaster.co.il/jobs/?q=מהנדס%20מכונות%20סטודנט&l=',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '5',
-      name: 'Drushim',
-      url: 'https://www.drushim.co.il/jobs/?searchterm=מהנדס%20מכונות%20סטודנט',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '7',
-      name: 'SQLink',
-      url: 'https://www.sqlink.com/career?search=engineering%20intern&type=internship',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '8',
-      name: 'Intel Israel',
-      url: 'https://jobs.intel.com/en_US/search?keywords=engineering%20intern&location=Israel',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '9',
-      name: 'Elbit Systems',
-      url: 'https://elbitsystemscareer.com/go/סטודנטים/9275855/',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '10',
-      name: 'IAI (אלתא)',
-      url: 'https://jobs.iai.co.il/jobs/?tp=משרת%20סטודנט',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '13',
-      name: 'Applied Materials',
-      url: 'https://jobs.appliedmaterials.com/location/israel-jobs/95/294640?q=student',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '14',
-      name: 'Art Medical',
-      url: 'https://artmedical.com/careers/?search=intern',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '15',
-      name: 'Arad Technologies',
-      url: 'https://aradtec.com/careers/?search=student',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '16',
-      name: 'Ness Technologies',
-      url: 'https://www.ness-tech.co.il/careers/?word=%D7%A1%D7%98%D7%95%D7%93%D7%A0%D7%98',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '17',
-      name: 'Amarel',
-      url: 'https://www.amarel.net/careers-tags/students/',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-    {
-      id: '18',
-      name: 'TAT Technologies',
-      url: 'https://apply.workable.com/tat-technologies-ltd/',
-      lastUpdated: '2025-01-01T00:00:00.000Z'
-    },
-  ];
-
-  const handleSourcesChange = (sources: JobSource[]) => {
-    setJobSources(sources);
-    localStorage.setItem('jobSources', JSON.stringify(sources));
-    saveSourcesGlobally(sources).catch(console.error);
-  };
-
-  const [jobSources, setJobSources] = useState<JobSource[]>(defaultSources);
+  const [jobSources, setJobSources] = useState<JobSource[]>([]);
   const visits = useVisitCount();
 
   useEffect(() => {
-    loadSourcesGlobally()
-      .then((data) => {
-        if (data && data.length) {
-          setJobSources(data);
-        } else {
-          const storedSources = localStorage.getItem('jobSources');
-          if (storedSources) setJobSources(JSON.parse(storedSources));
-        }
-      })
-      .catch(() => {
-        const storedSources = localStorage.getItem('jobSources');
-        if (storedSources) setJobSources(JSON.parse(storedSources));
-      });
+    getJobSources()
+      .then(setJobSources)
+      .catch(() => setJobSources([]));
   }, []);
 
   return (
@@ -136,7 +26,7 @@ const Index = () => {
 
         {/* Job Sources - Centralized */}
         <div className="max-w-6xl mx-auto">
-          <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
+          <JobSourceManager sources={jobSources} readOnly />
         </div>
 
         {/* Simple Footer */}

@@ -1,20 +1,24 @@
-version: '3.9'
+version: '3.8'
 services:
-  web:
+  frontend:
     build:
       context: .
-      args:
-        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
-        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+      dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - '3000:3000'
     environment:
-      - NODE_ENV=production
-  cms:
-    image: node:20-alpine
-    working_dir: /app
-    volumes:
-      - .:/app
+      - VITE_API_URL=http://localhost:4000/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - "8081:8081"
-    command: sh -c "npm install -g netlify-cli && netlify cms serve --dir admin --port 8081"
+      - '4000:4000'
+    volumes:
+      - ./backend/data:/app/data
+    environment:
+      - ADMIN_PASSWORD=afeka
+    restart: unless-stopped

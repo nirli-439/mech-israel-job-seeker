@@ -121,3 +121,31 @@ the `dist/` directory. Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and an
 optional `NETLIFY_AUTH_TOKEN`/`NETLIFY_SITE_ID` variables in your site
 configuration. Once deployed, access the CMS at `/admin` on your Netlify site.
 
+# Fevo - The Loveable Platform
+
+## Running Locally with Docker Compose
+
+This project now includes a backend (Express) for admin management of job sources, and a frontend (React). You can run both together using Docker Compose.
+
+### Steps
+
+1. Clone the repository:
+   ```sh
+   git clone <repo-url>
+   cd mech-israel-job-seeker
+   ```
+2. Build and start the services:
+   ```sh
+   docker-compose up --build
+   ```
+3. The frontend will be available at [http://localhost:3000](http://localhost:3000)
+4. The backend API will be available at [http://localhost:4000/api/job-sources](http://localhost:4000/api/job-sources)
+
+## Admin Access
+- Go to `/admin` on the frontend to log in as admin (password: `afeka`).
+- Only admins can edit/add/remove job sources.
+
+## Project Structure
+- `src/` - Frontend source code
+- `backend/` - Express backend (API, JSON storage)
+

@@ -1,4 +1,3 @@
-
 // This service shows how to implement global source management with a backend
 // Currently commented out since this is a static app without Supabase integration
 
@@ -10,6 +9,23 @@ export interface JobSource {
   url: string;
   lastUpdated?: string; // ISO timestamp string
 }
+
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
+export const getJobSources = async (): Promise<JobSource[]> => {
+  const res = await fetch(`${API_URL}/job-sources`);
+  if (!res.ok) throw new Error('Failed to fetch job sources');
+  return res.json();
+};
+
+export const saveJobSources = async (sources: JobSource[], password: string): Promise<void> => {
+  const res = await fetch(`${API_URL}/job-sources`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, sources })
+  });
+  if (!res.ok) throw new Error('Failed to save job sources');
+};
 
 // For static apps - Development workflow
 export const updateSourcesInCode = (sources: JobSource[]) => {
