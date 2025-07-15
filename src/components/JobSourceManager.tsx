@@ -111,6 +111,9 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
 
   const handleSave = () => {
     setIsEditing(false);
+    setHasChanges(false);
+    // Force a re-render by updating the sources
+    onSourcesChange([...editingSources]);
     toast({
       title: "שינויים נשמרו",
       description: "מקורות העבודה עודכנו בהצלחה.",
@@ -123,14 +126,7 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
     setNewSource({ name: '', url: '' });
   };
 
-  const handleReorder = (items: GlassIconsItem[]) => {
-    const newSources = items.map((item) => {
-      return sources.find((s) => s.id === item.id)!;
-    });
-    setEditingSources(newSources);
-    onSourcesChange(newSources);
-    setHasChanges(true);
-  };
+
 
   return (
     <div>
@@ -258,8 +254,6 @@ const JobSourceManager: React.FC<JobSourceManagerProps> = ({ sources, onSourcesC
                     customClass: 'cursor-pointer',
                   },
                 ]}
-                reorderable={isAuthenticated}
-                onReorder={handleReorder}
                 className="max-w-4xl mx-auto"
               />
             </div>

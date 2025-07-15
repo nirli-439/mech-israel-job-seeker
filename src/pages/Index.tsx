@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useVisitCount from '@/hooks/useVisitCount';
 import LanyardHeader from '@/components/LanyardHeader';
 import JobSourceManager from '@/components/JobSourceManager';
+import BallpitBackground from '@/components/reactbits/BallpitBackground';
 import { loadSourcesGlobally, saveSourcesGlobally, type JobSource } from '@/services/jobSourcesService';
 import { isUsingDatabase } from '@/services/supabaseClient';
 
@@ -119,8 +120,14 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden" dir="rtl">
+      {/* Animated Background Bubbles */}
+      <BallpitBackground 
+        amount={50} 
+        colors={["#3b82f6", "#60a5fa", "#93c5fd", "#dbeafe", "#1d4ed8"]} 
+      />
+
       {/* Centered Main Content */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-12 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 flex flex-col items-center gap-6">
           <LanyardHeader />
@@ -130,8 +137,6 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <JobSourceManager sources={jobSources} onSourcesChange={handleSourcesChange} />
         </div>
-
-        {/* Sources are managed above */}
 
         {/* Simple Footer */}
         <div className="relative text-center mt-16 pt-8 border-t border-gray-200">

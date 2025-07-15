@@ -2,12 +2,6 @@
 
 
 import React from "react";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
 
 export interface GlassIconsItem {
   id: string;
@@ -22,8 +16,6 @@ export interface GlassIconsItem {
 export interface GlassIconsProps {
   items: GlassIconsItem[];
   className?: string;
-  reorderable?: boolean;
-  onReorder?: (items: GlassIconsItem[]) => void;
 }
 
 const gradientMapping: Record<string, string> = {
@@ -38,11 +30,8 @@ const gradientMapping: Record<string, string> = {
 const GlassIcons: React.FC<GlassIconsProps> = ({
   items,
   className,
-  reorderable,
-  onReorder,
 }) => {
   console.log('GlassIcons rendered with items:', items);
-  console.log('GlassIcons reorderable:', reorderable);
 
   const getBackgroundStyle = (color: string): React.CSSProperties => {
     if (gradientMapping[color]) {
@@ -51,17 +40,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
     return { background: color };
   };
 
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination || !onReorder) return;
-    const updated = Array.from(items);
-    const [removed] = updated.splice(result.source.index, 1);
-    updated.splice(result.destination.index, 0, removed);
-    onReorder(updated);
-  };
-
   const renderItem = (item: GlassIconsItem, index: number) => {
-    console.log('Rendering item:', item);
-    
     const commonClasses = `relative bg-transparent outline-none w-[4.5em] h-[4.5em] [perspective:24em] [transform-style:preserve-3d] [-webkit-tap-highlight-color:transparent] transition-transform duration-200 hover:-translate-y-1 group mb-8 ${
       item.customClass || ""
     }`;
@@ -69,7 +48,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
     const content = (
       <>
         <span
-          className="absolute top-0 left-0 w-full h-full rounded-[1.25em] block transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.83,0,0.17,1)] origin-[100%_100%] rotate-[15deg] group-hover:[transform:rotate(25deg)_translate3d(-0.5em,-0.5em,0.5em)]"
+          className="absolute top-0 left-0 w-full h-full rounded-[1.25em] block transition-[opacity,transform] duration-300 ease-&lsqb;cubic-bezier(0.83,0,0.17,1)&rsqb; origin-[100%_100%] rotate-[15deg] group-hover:[transform:rotate(25deg)_translate3d(-0.5em,-0.5em,0.5em)]"
           style={{
             ...getBackgroundStyle(item.color),
             boxShadow: "0.5em -0.5em 0.75em hsla(223, 10%, 10%, 0.15)",
@@ -77,7 +56,7 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
         ></span>
 
         <span
-          className="absolute top-0 left-0 w-full h-full rounded-[1.25em] bg-[hsla(0,0%,100%,0.15)] transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.83,0,0.17,1)] origin-[80%_50%] flex backdrop-blur-[0.75em] [-webkit-backdrop-filter:blur(0.75em)] transform group-hover:[transform:translateZ(2em)]"
+          className="absolute top-0 left-0 w-full h-full rounded-[1.25em] bg-[hsla(0,0%,100%,0.15)] transition-[opacity,transform] duration-300 ease-&lsqb;cubic-bezier(0.83,0,0.17,1)&rsqb; origin-[80%_50%] flex backdrop-blur-[0.75em] [-webkit-backdrop-filter:blur(0.75em)] transform group-hover:[transform:translateZ(2em)]"
           style={{
             boxShadow: "0 0 0 0.1em hsla(0, 0%, 100%, 0.3) inset",
           }}
@@ -131,29 +110,10 @@ const GlassIcons: React.FC<GlassIconsProps> = ({
 
   const gridClasses = `grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 sm:gap-8 lg:gap-10 mx-auto py-8 px-4 overflow-visible ${className || ""}`;
 
-  console.log('Grid classes:', gridClasses);
-
-  return reorderable && onReorder ? (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="icons">
-        {(provided) => (
-          <div ref={provided.innerRef} {...provided.droppableProps} className={gridClasses}>
-            {items.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(drag) => (
-                  <div ref={drag.innerRef} {...drag.draggableProps} {...drag.dragHandleProps}>
-                    {renderItem(item, index)}
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
-  ) : (
-    <div className={gridClasses}>{items.map(renderItem)}</div>
+  return (
+    <div className={gridClasses}>
+      {items.map(renderItem)}
+    </div>
   );
 };
 
